@@ -1,0 +1,17 @@
+{
+  "gui.versatilesanity.config.option.starting_sanity_value": "Cordura inicial.",
+  "gui.versatilesanity.config.option.max_sanity_value": "Cordura maxima.",
+  "gui.versatilesanity.config.option.respawn_sanity_value": "Cordura al Re-spawnear.",
+  "gui.versatilesanity.config.option.darkness_exposure_decrease_factor": "Factor decreciente expuesto a la oscuridad.",
+  "gui.versatilesanity.config.option.darkness_exposure_ticks": "Ticks en la oscuridad.",
+  "gui.versatilesanity.config.option.hostile_exposure_decrease_factor": "Factor decreciente expuesto a mobs hostiles.",
+  "gui.versatilesanity.config.option.hostile_check_ticks": "Ticks cerca de mobs hostiles.",
+  "gui.versatilesanity.config.option.hostile_check_radius": "Area de comprobación de mobs hostiles.",
+  "gui.versatilesanity.config.option.village_exposure_increase_factor": "Factor creciente expuesto a villas",
+  "gui.versatilesanity.config.option.village_check_ticks": "Ticks cerca de aldea.",
+  "gui.versatilesanity.config.option.village_check_radius": "Area de comprobación de aldeas.",
+  "gui.versatilesanity.config.option.portal_exposure_decrease_factor": "Factor decreciente expuesto a portales.",
+  "gui.versatilesanity.config.option.portal_check_ticks": "Ticks cerca de portal.",
+  "gui.versatilesanity.config.option.portal_check_radius": "Area de comprobación de portales.",
+  "gui.versatilesanity.config.option.scary_sound_decrease_factor": "Factor decreciente al escuchar algo raro."
+}

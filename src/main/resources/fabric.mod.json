@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "versatilesanity",
+  "version": "${version}",
+  "name": "VersatileSanity",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/marco/VersatileSanity"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/versatilesanity/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.restonic4.versatilesanity.VersatileSanityClient"
+    ],
+    "main": [
+      "com.restonic4.versatilesanity.VersatileSanity"
+    ],
+    "cardinal-components": ["com.restonic4.versatilesanity.components.SanityStatusComponents"]
+  },
+  "custom": {
+    "cardinal-components": [
+      "versatilesanity:sanity"
+    ]
+  },
+  "mixins": [
+    "versatilesanity.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "cardinal-components-base": ">=5.0.0",
+    "cardinal-components-entity": ">=5.0.0"
+  }
+}

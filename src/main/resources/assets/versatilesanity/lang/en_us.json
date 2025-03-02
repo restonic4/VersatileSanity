@@ -1,0 +1,17 @@
+{
+  "gui.versatilesanity.config.option.starting_sanity_value": "Starting sanity value.",
+  "gui.versatilesanity.config.option.max_sanity_value": "Max sanity value.",
+  "gui.versatilesanity.config.option.respawn_sanity_value": "Re-spawn sanity value.",
+  "gui.versatilesanity.config.option.darkness_exposure_decrease_factor": "Darkness exposure decrease factor.",
+  "gui.versatilesanity.config.option.darkness_exposure_ticks": "Darkness exposure ticks.",
+  "gui.versatilesanity.config.option.hostile_exposure_decrease_factor": "Hostile mobs exposure decrease factor.",
+  "gui.versatilesanity.config.option.hostile_check_ticks": "Hostile mobs exposure ticks.",
+  "gui.versatilesanity.config.option.hostile_check_radius": "Hostile mobs check radius.",
+  "gui.versatilesanity.config.option.village_exposure_increase_factor": "Village exposure gain factor.",
+  "gui.versatilesanity.config.option.village_check_ticks": "Village exposure ticks.",
+  "gui.versatilesanity.config.option.village_check_radius": "Villages check radius.",
+  "gui.versatilesanity.config.option.portal_exposure_decrease_factor": "Portal exposure decrease factor.",
+  "gui.versatilesanity.config.option.portal_check_ticks": "Portal exposure ticks.",
+  "gui.versatilesanity.config.option.portal_check_radius": "Portals check radius.",
+  "gui.versatilesanity.config.option.scary_sound_decrease_factor": "Strange sound decrease factor."
+}
