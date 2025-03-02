@@ -41,18 +41,23 @@ dependencies {
     modImplementation files("libs/test.jar")
     //modImplementation("maven.modrinth:under-control:${project.uctrl_version}")
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+    modImplementation("maven.modrinth:tough-as-nails:${project.tan_version}")
 }
 
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
     inputs.property "loader_version", project.loader_version
+    inputs.property "cca_version_min", project.cca_version_min
+    inputs.property "uctrl_version_min", project.uctrl_version_min
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
                 "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+                "loader_version": project.loader_version,
+                "cca_version_min": project.cca_version_min,
+                "uctrl_version_min": project.uctrl_version_min
     }
 }
 

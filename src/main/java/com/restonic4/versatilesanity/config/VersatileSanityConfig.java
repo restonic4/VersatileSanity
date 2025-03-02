@@ -42,6 +42,7 @@ public class VersatileSanityConfig extends ModConfig {
     Reducción por estar solo: -2 cada 1200 ticks en un radio de 24 bloques
     Reducción por estar bajo tierra: -2 cada 1200 ticks
     Reducción por nor dormir: -6 cada 1200 ticks multiplicado por la cantidad de tiempo sin dormir (Normalizado entre 0 y 1, 0 cuanto mas cerca de 1 dia, 1 cuanto mas cerca de 3 dias)
+    Reducción por temperature (Tough as nails): -2 cada 1200 ticks
 
     Incremento cerca de aldeas: 1 cada 1200 ticks en un radio de 16 bloques
     Incremento al tener el estomago lleno: 2 cada 1200 ticks a partir del 50% de la barra llena (Se le aplica un multiplicador extra entre 0 y 1, cuanto mas cerca del porcentaje dado mas cerca de 0 esta, cuanto mas cerca del 100%, mas cerca del 1 es)
@@ -49,6 +50,8 @@ public class VersatileSanityConfig extends ModConfig {
     Incremento cerca de mascotas: 2 cada 1200 ticks en un radio de 24 bloques
     Incremento al pescar: 2 por cada pez (Multiplicado dependiendo si es basura (x0), normal (x1) o tesoro (x2))
     Incremento al plantar: 1 cada cultivo (Se aplica un % aleatorio de veces, no siempre se aplica)
+    Incremento al escuchar discos de musica: 1 cada 600 ticks en un radio de 24 bloques
+    Incremento al obtener un logro: 6
 
      */
 
@@ -119,6 +122,15 @@ public class VersatileSanityConfig extends ModConfig {
 
         getServerConfig().registerOption("fishing_increase_factor", 2, "How much sanity you gain by fishing");
         getServerConfig().registerOption("plating_increase_factor", 1, "How much sanity you gain by plating");
+
+        getServerConfig().registerOption("music_increase_factor", 1, "How much sanity you gain by listing music disc");
+        getServerConfig().registerOption("music_check_ticks", 600, "Every this amount of ticks the sanity gain is applied");
+        getServerConfig().registerOption("music_check_radius", 24, "Radius in which the jukeboxes are detected");
+
+        getServerConfig().registerOption("advancement_increase_factor", 6, "How much sanity you gain by getting an advancement");
+
+        getServerConfig().registerOption("temperature_decrease_factor", 1, "How much sanity you lose with temperature");
+        getServerConfig().registerOption("temperature_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
     }
 
     public int getMaxSanity() {
@@ -307,5 +319,29 @@ public class VersatileSanityConfig extends ModConfig {
 
     public int getPlatingIncreaseFactor() {
         return getServerConfig().get("plating_increase_factor", Integer.class);
+    }
+
+    public int getMusicIncreaseFactor() {
+        return getServerConfig().get("music_increase_factor", Integer.class);
+    }
+
+    public int getMusicTicks() {
+        return getServerConfig().get("music_check_ticks", Integer.class);
+    }
+
+    public int getMusicRadius() {
+        return getServerConfig().get("music_check_radius", Integer.class);
+    }
+
+    public int getAdvancementIncreaseFactor() {
+        return getServerConfig().get("advancement_increase_factor", Integer.class);
+    }
+
+    public int getTemperatureDecreaseFactor() {
+        return getServerConfig().get("temperature_decrease_factor", Integer.class);
+    }
+
+    public int getTemperatureTicks() {
+        return getServerConfig().get("temperature_check_ticks", Integer.class);
     }
 }

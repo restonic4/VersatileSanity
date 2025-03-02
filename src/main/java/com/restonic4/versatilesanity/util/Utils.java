@@ -1,6 +1,7 @@
 package com.restonic4.versatilesanity.util;
 
 import com.restonic4.versatilesanity.VersatileSanity;
+import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -28,16 +29,19 @@ import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EndGatewayBlock;
-import net.minecraft.world.level.block.EndPortalBlock;
-import net.minecraft.world.level.block.NetherPortalBlock;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.LootDataManager;
@@ -184,10 +188,6 @@ public class Utils {
             return horse.isTamed();
         }
 
-        else if (entity instanceof TraceableEntity ownable) {
-            return ownable.getOwner() != null;
-        }
-
         // Add custom compatibility if needed
         return false;
     }
@@ -325,4 +325,38 @@ public class Utils {
         return tag != null && !tag.isEmpty() && "minecraft:parrot".equals(tag.getString("id"));
     }
 
+    public static boolean[] isNearPlayingJukebox(Player player, int radius) {
+        BlockPos playerPos = player.blockPosition();
+
+        boolean[] result = new boolean[] { false, false };
+
+        BlockPos.betweenClosedStream(
+                playerPos.offset(-radius, -radius, -radius),
+                playerPos.offset(radius, radius, radius)
+        ).forEach(pos -> {
+            BlockState state = player.level().getBlockState(pos);
+
+            if (state.getBlock() == Blocks.JUKEBOX) {
+                BlockEntity blockEntity = player.level().getBlockEntity(pos);
+
+                if (blockEntity instanceof JukeboxBlockEntity jukebox && jukebox.isRecordPlaying()) {
+                    ItemStack discStack = jukebox.getFirstItem();
+
+                    if (!discStack.isEmpty() && discStack.getItem() instanceof RecordItem recordItem) {
+                        ResourceLocation discId = BuiltInRegistries.ITEM.getKey(recordItem);
+
+                        if ("minecraft:music_disc_13".equals(discId.toString())) {
+                            result[0] = true;
+                            result[1] = true;
+                        } else {
+                            result[0] = true;
+                            result[1] = false;
+                        }
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
 }

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "FishingHookMixin",
+    "PlayerAdvancementsMixin",
     "PlayerMixin",
     "ServerPlayerGameModeMixin"
   ],

@@ -116,6 +116,10 @@ public class SanityEventHandler {
     public static void onSleepDeprivedTick(Player player, float progress) {
         int value = (int) (config.getSleepDeprivedDecreaseFactor() * progress);
 
+        if (value <= 0) {
+            return;
+        }
+
         System.out.println("[-] Sleep deprived: " + value + ", Progress %: " + progress);
         SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(value);
     }
@@ -148,9 +152,29 @@ public class SanityEventHandler {
     }
 
     public static void onCropPlanted(ServerPlayer serverPlayer, BlockState placedState) {
-        if (RandomHelper.randomBetween(0, 100) <= 10) {
-            System.out.println("[+] Crop planted ");
+        if (RandomHelper.randomBetween(0, 100) <= 25) {
+            System.out.println("[+] Crop planted");
             SanityStatusComponents.SANITY_STATUS.get(serverPlayer).incrementSanityStatus(config.getPlatingIncreaseFactor());
         }
+    }
+
+    public static void onMusicDiscPlaying(Player player, boolean shouldDecreaseSanity) {
+        if (shouldDecreaseSanity) {
+            System.out.println("[-] Music disc");
+            SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getMusicIncreaseFactor());
+        } else {
+            System.out.println("[+] Music disc");
+            SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getMusicIncreaseFactor());
+        }
+    }
+
+    public static void onAdvancementMade(ServerPlayer player) {
+        System.out.println("[+] Advancement");
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getAdvancementIncreaseFactor());
+    }
+
+    public static void onTemperatureTick(Player player) {
+        System.out.println("[-] Temperature");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getTemperatureDecreaseFactor());
     }
 }

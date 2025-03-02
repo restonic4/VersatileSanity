@@ -2,6 +2,8 @@ package com.restonic4.versatilesanity.mixin;
 
 import com.mojang.datafixers.util.Either;
 import com.restonic4.versatilesanity.VersatileSanity;
+import com.restonic4.versatilesanity.compatibility.CompatibleMods;
+import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
@@ -85,6 +87,20 @@ public class PlayerMixin {
                     SanityEventHandler.onNearPetTick(player);
                 } else if(Utils.hasParrotsOnShoulders(player)) {
                     SanityEventHandler.onNearPetTick(player);
+                }
+            }
+
+            if (shouldTick(player, config.getMusicTicks())) {
+                boolean[] flags = Utils.isNearPlayingJukebox(player, config.getMusicRadius());
+
+                if (flags[0]) {
+                    SanityEventHandler.onMusicDiscPlaying(player, flags[1]);
+                }
+            }
+
+            if (shouldTick(player, config.getTemperatureTicks())) {
+                if (VersatileSanity.isModLoaded(CompatibleMods.TOUGH_AS_NAILS) && ToughAsNailsCompatibility.shouldTemperatureDecreaseSanity(player)) {
+                    SanityEventHandler.onTemperatureTick(player);
                 }
             }
         }

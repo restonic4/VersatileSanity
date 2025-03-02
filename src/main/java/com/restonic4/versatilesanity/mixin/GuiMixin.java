@@ -9,11 +9,14 @@ import com.restonic4.versatilesanity.util.SanityIconState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -24,7 +27,7 @@ public class GuiMixin {
 
     private static final int MAX_ICONS  = 10;
 
-    private static final int ICON_SIZE  = 16;
+    private static final int ICON_SIZE  = 9;
     private static final int RENDER_SIZE = 8;
 
     private static final int TEXTURE_WIDTH  = ICON_SIZE * 8;
@@ -56,8 +59,23 @@ public class GuiMixin {
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
 
+        /*int left = width / 2 - 91;
+        int top = height - 49;*/
+
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+        if (player == null) return;
+
+        float maxHealth = (float) player.getAttributeValue(Attributes.MAX_HEALTH);
+        float absorption = player.getAbsorptionAmount();
+        float totalHearts = (maxHealth + absorption) / 2.0F;
+        int q = Mth.ceil(totalHearts / 10.0F); // Número de filas de salud
+        int r = Math.max(10 - (q - 2), 3); // Espaciado entre filas
+        int baseY = height - 39; // Posición base de los corazones
+        int armorY = baseY - (q - 1) * r - 10; // Y donde se renderiza la armadura
+
         int left = width / 2 - 91;
-        int top = height - 49;
+        int top = armorY /*- ICON_SIZE*/;
 
         int currentSanity = ClientSanityManager.getSanity();
         int maxSanity = VersatileSanity.getConfig().getMaxSanity();
@@ -177,5 +195,16 @@ public class GuiMixin {
         yOffset += (int) ((rand.nextFloat() - 0.5f) * 4.0f * easedIntensity);
 
         return yOffset;
+    }
+
+    @Redirect(
+            method = "renderPlayerHealth",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/player/Player;getArmorValue()I"
+            )
+    )
+    private int modifyArmorValue(Player instance) {
+        return 0;
     }
 }

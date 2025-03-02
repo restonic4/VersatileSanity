@@ -23,7 +23,15 @@
   "custom": {
     "cardinal-components": [
       "versatilesanity:sanity"
-    ]
+    ],
+    "modmenu": {
+      "links": {
+        "modmenu.modrinth": "https://modrinth.com/organization/chaotic-loom"
+      },
+      "badges": [
+        "chaotic_loom"
+      ]
+    }
   },
   "mixins": [
     "versatilesanity.mixins.json"
@@ -33,7 +41,8 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}",
-    "cardinal-components-base": ">=5.0.0",
-    "cardinal-components-entity": ">=5.0.0"
+    "cardinal-components-base": ">=${cca_version_min}",
+    "cardinal-components-entity": ">=${cca_version_min}",
+    "under_control": ">=${uctrl_version_min}"
   }
 }

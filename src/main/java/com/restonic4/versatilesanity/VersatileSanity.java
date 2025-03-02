@@ -1,6 +1,9 @@
 package com.restonic4.versatilesanity;
 
+import com.chaotic_loom.under_control.util.FabricHelper;
 import com.chaotic_loom.under_control.util.RandomHelper;
+import com.restonic4.versatilesanity.compatibility.CompatibleMods;
+import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
@@ -8,14 +11,9 @@ import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.core.BlockPos;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,14 +26,6 @@ import net.minecraft.world.entity.animal.sniffer.Sniffer;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.EntityHitResult;
-import org.jetbrains.annotations.Nullable;
 
 public class VersatileSanity implements ModInitializer {
     public static final String MOD_ID = "versatilesanity";
@@ -56,6 +46,11 @@ public class VersatileSanity implements ModInitializer {
         });
 
         ServerLivingEntityEvents.ALLOW_DEATH.register(this::onPlayerAttackEntity);
+
+
+        if (isModLoaded(CompatibleMods.TOUGH_AS_NAILS)) {
+            ToughAsNailsCompatibility.onInitialize();
+        }
     }
 
     private boolean onPlayerAttackEntity(LivingEntity livingEntity, DamageSource damageSource, float amount) {
@@ -98,11 +93,13 @@ public class VersatileSanity implements ModInitializer {
         return config;
     }
 
-    /*
-Actividades que suben la cordura:
+    public static boolean isModLoaded(CompatibleMods compatibleMod) {
+        return FabricLoader.getInstance().isModLoaded(compatibleMod.getId());
+    }
 
-Cultivar plantas: +1 por planta cosechada
-Completar un logro: +5 por logro
-Escuchar música (discos): +5 mientras suena
+    /*
+    oceano
+    blood moon
+    temperatura
      */
 }
