@@ -4,7 +4,9 @@
   "package": "com.restonic4.versatilesanity.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FishingHookMixin",
     "PlayerMixin",
+    "ServerPlayerGameModeMixin"
   ],
   "client": [
     "GuiMixin",

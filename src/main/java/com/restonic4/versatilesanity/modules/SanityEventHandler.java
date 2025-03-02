@@ -1,0 +1,156 @@
+package com.restonic4.versatilesanity.modules;
+
+import com.chaotic_loom.under_control.util.RandomHelper;
+import com.restonic4.versatilesanity.VersatileSanity;
+import com.restonic4.versatilesanity.components.SanityStatusComponents;
+import com.restonic4.versatilesanity.config.VersatileSanityConfig;
+import com.restonic4.versatilesanity.util.Utils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class SanityEventHandler {
+    public static ResourceLocation FISH_LOOT_TABLE = new ResourceLocation("minecraft", "gameplay/fishing/fish");
+    public static ResourceLocation JUNK_LOOT_TABLE = new ResourceLocation("minecraft", "gameplay/fishing/junk");
+    public static ResourceLocation TREASURE_LOOT_TABLE = new ResourceLocation("minecraft", "gameplay/fishing/treasure");
+
+    public static VersatileSanityConfig config = VersatileSanity.getConfig();
+
+    public static void onDarknessTick(Player player) {
+        System.out.println("[-] Darkness");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getDarknessDecreaseFactor());
+    }
+
+    public static void onNearHostileMobTick(Player player) {
+        System.out.println("[-] Hostile mob");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getHostileMobDecreaseFactor());
+    }
+
+    public static void onNearVillageTick(Player player) {
+        System.out.println("[+] Village");
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getVillageGainFactor());
+    }
+
+    public static void onNearPortalTick(Player player) {
+        System.out.println("[-] Portal");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getPortalDecreaseFactor());
+    }
+
+    public static void onRainTick(Player player) {
+        System.out.println("[-] Rain");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getRainDecreaseFactor());
+    }
+
+    public static void onThunderTick(Player player) {
+        System.out.println("[-] Thunder");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getThunderDecreaseFactor());
+    }
+
+    public static void onNetherTick(Player player) {
+        System.out.println("[-] Nether");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getNetherDecreaseFactor());
+    }
+
+    public static void onTheEndTick(Player player) {
+        System.out.println("[-] End");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getEndDecreaseFactor());
+    }
+
+    public static void onBeingAloneTick(Player player) {
+        System.out.println("[-] Alone");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getAloneDecreaseFactor());
+    }
+
+    public static void onScarySoundTick(Player player) {
+        System.out.println("[-] Scary sound");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(VersatileSanity.getConfig().getScarySoundDecreaseFactor());
+    }
+
+    public static void onVillagerKilled(Player player) {
+        System.out.println("[-] Kill villager");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getKillVillagerDecreaseFactor());
+    }
+
+    public static void onPlayerKilled(Player player) {
+        System.out.println("[-] Kill player");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getKillPlayerDecreaseFactor());
+    }
+
+    public static void onAnimalKilled(Player player) {
+        System.out.println("[-] Kill animal");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getKillAnimalDecreaseFactor());
+    }
+
+    public static void onCuteCreatureKilled(Player player) {
+        System.out.println("[-] Kill cute");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getKillCuteDecreaseFactor());
+    }
+
+    public static void onDamage(Player player, float amount) {
+        System.out.println("[-] Damage");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus((int) (config.getDamageDecreaseFactor() * amount));
+    }
+
+    public static void onUndergroundTick(Player player) {
+        System.out.println("[-] Underground");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getUndergroundDecreaseFactor());
+    }
+
+    public static void onSatietyTick(Player player) {
+        float mult = Utils.calculateHungerValue(player);
+        int value = (int) (config.getSatietyIncreaseFactor() * mult);
+
+        System.out.println("[+] Satiety " + value);
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(value);
+    }
+
+    public static void onCompleteSleep(Player player, float completionPercentage) {
+        int value = (int) (config.getSleepIncreaseFactor() * completionPercentage);
+
+        System.out.println("[+] Sleep: " + value + ", Sleeping %: " + completionPercentage);
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(value);
+    }
+
+    public static void onSleepDeprivedTick(Player player, float progress) {
+        int value = (int) (config.getSleepDeprivedDecreaseFactor() * progress);
+
+        System.out.println("[-] Sleep deprived: " + value + ", Progress %: " + progress);
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(value);
+    }
+
+    public static void onNearBossTick(Player player) {
+        System.out.println("[-] Boss");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getBossDecreaseFactor());
+    }
+
+    public static void onNearPetTick(Player player) {
+        System.out.println("[+] Pet");
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getPetIncreaseFactor());
+    }
+
+    public static void onFishCaught(Player player, ItemStack item) {
+        int mult = 1;
+
+        if (Utils.isOnLootTable(item, JUNK_LOOT_TABLE, player.level().getServer())) {
+            mult = 0;
+        } else if (Utils.isOnLootTable(item, FISH_LOOT_TABLE, player.level().getServer())) {
+            mult = 1;
+        } else if (Utils.isOnLootTable(item, TREASURE_LOOT_TABLE, player.level().getServer())) {
+            mult = 2;
+        }
+
+        int value = config.getFishingIncreaseFactor() * mult;
+
+        System.out.println("[+] Fish " + value);
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(value);
+    }
+
+    public static void onCropPlanted(ServerPlayer serverPlayer, BlockState placedState) {
+        if (RandomHelper.randomBetween(0, 100) <= 10) {
+            System.out.println("[+] Crop planted ");
+            SanityStatusComponents.SANITY_STATUS.get(serverPlayer).incrementSanityStatus(config.getPlatingIncreaseFactor());
+        }
+    }
+}

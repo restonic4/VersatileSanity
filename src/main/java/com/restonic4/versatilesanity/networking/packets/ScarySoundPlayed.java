@@ -5,6 +5,7 @@ import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.restonic4.versatilesanity.VersatileSanity;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
+import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -28,8 +29,7 @@ public class ScarySoundPlayed {
         Vector3f soundPosition = friendlyByteBuf.readVector3f();
 
         if (player instanceof ServerPlayer serverPlayer) {
-            System.out.println("[-] Scary sound");
-            SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(VersatileSanity.getConfig().getScarySoundDecreaseFactor());
+            SanityEventHandler.onScarySoundTick(player);
         }
     }
 

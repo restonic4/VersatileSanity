@@ -1,18 +1,36 @@
 package com.restonic4.versatilesanity.util;
 
+import com.restonic4.versatilesanity.VersatileSanity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Structures;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
+import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -22,13 +40,25 @@ import net.minecraft.world.level.block.EndPortalBlock;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.storage.loot.LootDataManager;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -50,19 +80,13 @@ public class Utils {
         return Math.max(blockLight, rawSkyLight);
     }
 
-    public static boolean isPlayerNearHostileEntity(ServerPlayer player, double radius, double ignoreVisionRadius) {
+    public static boolean isPlayerNearEntity(ServerPlayer player, double radius, double ignoreVisionRadius, Predicate<Entity> filter) {
         Level level = player.level();
 
         // Radio externo - todos los hostiles en este rango (con comprobación de visión)
         AABB boxOuter = new AABB(
                 player.getX() - radius, player.getY() - radius, player.getZ() - radius,
                 player.getX() + radius, player.getY() + radius, player.getZ() + radius
-        );
-
-        // Radio interno - los hostiles en este rango se detectan siempre (sin comprobación de visión)
-        AABB boxInner = new AABB(
-                player.getX() - ignoreVisionRadius, player.getY() - ignoreVisionRadius, player.getZ() - ignoreVisionRadius,
-                player.getX() + ignoreVisionRadius, player.getY() + ignoreVisionRadius, player.getZ() + ignoreVisionRadius
         );
 
         // Obtener todas las entidades en el radio máximo
@@ -72,7 +96,7 @@ public class Utils {
         Vec3 eyePos = player.getEyePosition();
 
         for (Entity entity : entities) {
-            if (isHostile(entity)) {
+            if (!entity.equals(player) && filter.test(entity)) {
                 // Calcular la distancia al cuadrado (más eficiente que raíz cuadrada)
                 double distanceSq = entity.distanceToSqr(player);
 
@@ -108,9 +132,60 @@ public class Utils {
         return false;
     }
 
+    public static boolean isPlayerNearHostileEntity(ServerPlayer player, double radius, double ignoreVisionRadius) {
+        return isPlayerNearEntity(player, radius, ignoreVisionRadius, Utils::isHostile);
+    }
+
     private static boolean isHostile(Entity entity) {
         if (entity instanceof Enemy) {
             return true;
+        }
+
+        // Add custom compatibility if needed
+        return false;
+    }
+
+    public static boolean isPlayerNearPlayerOrVillagerEntity(ServerPlayer player, double radius, double ignoreVisionRadius) {
+        return isPlayerNearEntity(player, radius, ignoreVisionRadius, Utils::isPlayerOrVillager);
+    }
+
+    private static boolean isPlayerOrVillager(Entity entity) {
+        if (entity instanceof Player || entity instanceof Villager || entity instanceof WanderingTrader) {
+            return true;
+        }
+
+        // Add custom compatibility if needed
+        return false;
+    }
+
+    public static boolean isPlayerNearBossEntity(ServerPlayer player, double radius, double ignoreVisionRadius) {
+        return isPlayerNearEntity(player, radius, ignoreVisionRadius, Utils::isBoss);
+    }
+
+    private static boolean isBoss(Entity entity) {
+        if (entity instanceof EnderDragon || entity instanceof WitherBoss || entity instanceof Warden) {
+            return true;
+        }
+
+        // Add custom compatibility if needed
+        return false;
+    }
+
+    public static boolean isPlayerNearPetEntity(ServerPlayer player, double radius, double ignoreVisionRadius) {
+        return isPlayerNearEntity(player, radius, ignoreVisionRadius, Utils::isPet);
+    }
+
+    private static boolean isPet(Entity entity) {
+        if (entity instanceof TamableAnimal tamable) {
+            return tamable.isTame();
+        }
+
+        else if (entity instanceof AbstractHorse horse) {
+            return horse.isTamed();
+        }
+
+        else if (entity instanceof TraceableEntity ownable) {
+            return ownable.getOwner() != null;
         }
 
         // Add custom compatibility if needed
@@ -209,4 +284,45 @@ public class Utils {
 
         return false;
     }
+
+    public static float calculateHungerValue(Player player) {
+        float threshold = VersatileSanity.getConfig().getSatietyThreshold();
+
+        FoodData foodData = player.getFoodData();
+        int foodLevel = foodData.getFoodLevel();
+
+        float currentHungerPercentage = foodLevel / 20.0f;
+
+        if (currentHungerPercentage < threshold) {
+            return 0.0f;
+        }
+
+        return (currentHungerPercentage - threshold) / (1.0f - threshold);
+    }
+
+    public static boolean isOnLootTable(ItemStack stack, ResourceLocation lootTableId, MinecraftServer server) {
+        LootTable lootTable = server.getLootData().getLootTable(lootTableId);
+
+        for (LootPool pool : lootTable.pools) {
+            for (LootPoolEntryContainer entry : pool.entries) {
+                if (entry instanceof LootItem lootItem) {
+                    if (lootItem.item == stack.getItem()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasParrotsOnShoulders(Player player) {
+        CompoundTag leftShoulder = player.getShoulderEntityLeft();
+        CompoundTag rightShoulder = player.getShoulderEntityRight();
+        return isParrotTag(leftShoulder) || isParrotTag(rightShoulder);
+    }
+
+    private static boolean isParrotTag(CompoundTag tag) {
+        return tag != null && !tag.isEmpty() && "minecraft:parrot".equals(tag.getString("id"));
+    }
+
 }

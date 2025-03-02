@@ -1,6 +1,6 @@
 package com.restonic4.versatilesanity.mixin;
 
-import com.restonic4.versatilesanity.util.CaveSoundHandler;
+import com.restonic4.versatilesanity.modules.CaveSoundHandler;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import org.spongepowered.asm.mixin.Mixin;

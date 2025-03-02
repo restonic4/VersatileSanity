@@ -1,12 +1,9 @@
-package com.restonic4.versatilesanity.util;
+package com.restonic4.versatilesanity.modules;
 
 import com.restonic4.versatilesanity.networking.packets.ScarySoundPlayed;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 

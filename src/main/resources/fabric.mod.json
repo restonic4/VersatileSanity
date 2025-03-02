@@ -28,6 +28,7 @@
   "mixins": [
     "versatilesanity.mixins.json"
   ],
+  "accessWidener": "mod.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
