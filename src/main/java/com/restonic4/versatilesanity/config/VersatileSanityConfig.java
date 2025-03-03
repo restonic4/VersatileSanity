@@ -10,7 +10,11 @@ public class VersatileSanityConfig extends ModConfig {
 
     @Override
     protected void registerClientOptions() {
+        getClientConfig().registerOption("debug_ocean", false, "Rendering debug data for the ocean detector");
+    }
 
+    public boolean getDebugOcean() {
+        return getClientConfig().get("debug_ocean", Boolean.class);
     }
 
     /*

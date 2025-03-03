@@ -7,7 +7,9 @@ import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
 import com.chaotic_loom.under_control.events.EventResult;
 import com.chaotic_loom.under_control.events.types.ClientEvents;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.CaveSoundHandler;
+import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VersatileSanityClient implements ClientModInitializer {
-    Sphere[] debug = new Sphere[WaterMassDetector.WATER_CHECK_SAMPLES];
+    private VersatileSanityConfig config = VersatileSanity.getConfig();
 
     @Override
     public void onInitializeClient() {
@@ -31,22 +33,11 @@ public class VersatileSanityClient implements ClientModInitializer {
             return EventResult.SUCCEEDED;
         });
 
-        for (int i = 0; i < 8; i++) {
-            Sphere sphere = new Sphere(MathHelper.getUniqueID() + "s");
-            EffectManager.add(sphere);
-            debug[i] = sphere;
-        }
-
         ClientTickEvents.START_CLIENT_TICK.register((minecraft) -> {
-            if (minecraft.level == null && minecraft.player == null) {
-                return;
-            }
-
-            WaterMassDetector.hasEnoughWaterAround(minecraft.level, minecraft.player.blockPosition());
-            BlockPos[] debugPos = WaterMassDetector.getLastCheckedBlocks();
-
-            for (int i = 0; i < WaterMassDetector.WATER_CHECK_SAMPLES; i++) {
-                debug[i].setPosition(debugPos)
+            if (config.getDebugOcean()) {
+                ClientDebuggers.OCEAN.enable();
+            } else {
+                ClientDebuggers.OCEAN.disable();
             }
         });
     }

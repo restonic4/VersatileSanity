@@ -1,12 +1,13 @@
 package com.restonic4.versatilesanity.util;
 
+import com.chaotic_loom.under_control.util.WeightedEvaluator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,10 +16,16 @@ import net.minecraft.world.level.material.FluidState;
 public class WaterMassDetector {
     public static final int MIN_DISTANCE_FROM_SHORE = 15;
     public static final int MIN_DEPTH = 8;
-    public static final int WATER_CHECK_SAMPLES = 8;
+    public static final int WATER_CHECK_SAMPLES = 14;
     public static final double MIN_WATER_PERCENTAGE = 0.8;
+    public static final double WATER_SUBMERGED_PERCENTAGE = 0.15;
+    public static final double APPROVAL_THRESHOLD = 75;
 
+    //Debug
     private static BlockPos[] lastCheckedBlocks;
+    private static boolean[] lastCheckedBlocksResults;
+
+    private static int lastSubmersionHeight = 0;
 
     /**
      * Comprueba si un jugador está en un océano profundo y a qué profundidad.
@@ -26,40 +33,36 @@ public class WaterMassDetector {
      * @param player El jugador a comprobar
      * @return Un objeto WaterMassDetectionResult con los resultados
      */
-    public static WaterMassDetectionResult isInDeepOcean(ServerPlayer player) {
+    public static WaterMassDetectionResult isInDeepOcean(Player player) {
+        WeightedEvaluator evaluator = new WeightedEvaluator();
+
         Level level = player.level();
         BlockPos playerPos = player.blockPosition();
 
-        // Comprobar si el bioma es un océano o un lago grande
-        boolean isWaterBiome = isInWaterBiome(player);
-
-        if (!isWaterBiome) {
-            return new WaterMassDetectionResult(false, false);
-        }
-
-        // Comprobar si hay suficiente agua alrededor para considerarlo océano profundo
-        if (!hasEnoughWaterAround(level, playerPos)) {
-            return new WaterMassDetectionResult(false, false);
-        }
-
-        // Calcular la profundidad total en este punto
         int totalDepth = calculateWaterDepth(level, playerPos);
 
-        // Si la profundidad es menor que el mínimo, no es un océano profundo
-        if (totalDepth < MIN_DEPTH) {
-            return new WaterMassDetectionResult(false, false);
-        }
+        boolean isInWater = player.isInWater();
+        boolean isWaterBiome = isInWaterBiome(player);
+        boolean hasEnoughWaterAround = hasEnoughWaterAround(level, playerPos);
+        boolean requiredDepth = totalDepth >= MIN_DEPTH;
 
-        // Comprobar si el jugador está sumergido más del 25% de la profundidad total
+        evaluator.addResult("in water", 2, isInWater);
+        evaluator.addResult("biome", 2, isWaterBiome);
+        evaluator.addResult("water around", 1, hasEnoughWaterAround);
+        evaluator.addResult("required depth", 3, requiredDepth);
+
+        evaluator.evaluateAll();
+
+        boolean isInDeepOcean = evaluator.isApproved(APPROVAL_THRESHOLD);
         boolean isSubmergedEnough = isPlayerSubmergedEnough(player, totalDepth);
 
-        return new WaterMassDetectionResult(true, isSubmergedEnough);
+        return new WaterMassDetectionResult(isInDeepOcean, isSubmergedEnough, evaluator.getApprovalPercentage());
     }
 
     /**
      * Comprueba si el jugador está en un bioma de agua (océano o río grande).
      */
-    public static boolean isInWaterBiome(ServerPlayer player) {
+    public static boolean isInWaterBiome(Player player) {
         Level level = player.level();
         BlockPos pos = player.blockPosition();
 
@@ -83,6 +86,7 @@ public class WaterMassDetector {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
         lastCheckedBlocks = new BlockPos[WATER_CHECK_SAMPLES];
+        lastCheckedBlocksResults = new boolean[WATER_CHECK_SAMPLES];
 
         // Usar muestreo radial en lugar de cuadricular para reducir comprobaciones
         for (int i = 0; i < WATER_CHECK_SAMPLES; i++) {
@@ -93,20 +97,29 @@ public class WaterMassDetector {
 
             // Configurar posición mutable para evitar crear nuevos objetos BlockPos
             mutablePos.set(checkX, pos.getY(), checkZ);
+
             lastCheckedBlocks[i] = new BlockPos(checkX, pos.getY(), checkZ);
+            lastCheckedBlocksResults[i] = false;
 
             // Obtener la altura de la columna en esta posición
-            BlockPos waterPos = findWaterSurface(level, mutablePos);
-            if (waterPos == null) {
+            BlockPos waterSurface = findWaterSurface(level, mutablePos);
+            if (waterSurface == null) {
                 continue;
             }
 
-            int y = waterPos.getY();
+            BlockPos waterBottom = findWaterBottom(level, waterSurface);
+            // Verificar si la Y del jugador está dentro de la columna de agua
+            if (pos.getY() < waterBottom.getY() || pos.getY() > waterSurface.getY()) {
+                continue;
+            }
+
+            int y = waterSurface.getY();
 
             if (y != -1) {
                 mutablePos.setY(y);
                 if (level.getBlockState(mutablePos).getBlock() == Blocks.WATER) {
                     waterBlocks++;
+                    lastCheckedBlocksResults[i] = true;
                 }
             }
         }
@@ -146,6 +159,7 @@ public class WaterMassDetector {
     public static int calculateWaterDepth(Level level, BlockPos pos) {
         BlockPos waterSurface = findWaterSurface(level, pos);
         if (waterSurface == null) {
+
             return 0;
         }
 
@@ -176,19 +190,32 @@ public class WaterMassDetector {
         return !blockState.isSolidRender(level, pos);
     }
 
+    public static BlockPos findWaterBottom(Level level, BlockPos waterSurface) {
+        BlockPos waterBottom = waterSurface;
+        while (waterBottom.getY() > level.getMinBuildHeight() && isFluid(level, waterBottom.below())) {
+            waterBottom = waterBottom.below();
+        }
+        return waterBottom;
+    }
+
     /**
-     * Comprueba si el jugador está sumergido más del 15% en el agua.
+     * Comprueba si el jugador está sumergido más del X% en el agua.
      */
-    public static boolean isPlayerSubmergedEnough(ServerPlayer player, int totalDepth) {
+    public static boolean isPlayerSubmergedEnough(Player player, int totalDepth) {
+        BlockPos pos = player.blockPosition();
+        Level level = player.level();
+
+        if (!player.isInWater()) {
+            return false;
+        }
+
         if (totalDepth <= 0) {
             return false;
         }
 
-        BlockPos pos = player.blockPosition();
-        Level level = player.level();
-
         BlockPos waterSurface = findWaterSurface(level, pos);
         if (waterSurface == null) {
+            lastSubmersionHeight = level.getMinBuildHeight();
             return false;
         }
 
@@ -203,11 +230,14 @@ public class WaterMassDetector {
 
         // Profundidad del jugador desde la superficie del agua
         double playerDepth = waterSurfaceTop - eyeY;
+        double minimumHeight = (totalDepth * WATER_SUBMERGED_PERCENTAGE);
+
+        lastSubmersionHeight = (int) (waterSurfaceTop - minimumHeight);
 
         if (isCovered) {
             return playerDepth > 0;
         } else {
-            return playerDepth > (totalDepth * 0.15);
+            return playerDepth > minimumHeight;
         }
     }
 
@@ -215,6 +245,14 @@ public class WaterMassDetector {
         return lastCheckedBlocks;
     }
 
-    public record WaterMassDetectionResult(boolean isInDeepOcean, boolean isSubmergedEnough) {
+    public static boolean[] getLastCheckedBlocksResults() {
+        return lastCheckedBlocksResults;
+    }
+
+    public static int getLastSubmersionHeight() {
+        return lastSubmersionHeight;
+    }
+
+    public record WaterMassDetectionResult(boolean isInDeepOcean, boolean isSubmergedEnough, double threshold) {
     }
 }
