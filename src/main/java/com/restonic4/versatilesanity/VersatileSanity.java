@@ -1,12 +1,18 @@
 package com.restonic4.versatilesanity;
 
+import com.chaotic_loom.under_control.events.EventResult;
+import com.chaotic_loom.under_control.events.types.LivingEntityExtraEvents;
+import com.chaotic_loom.under_control.events.types.PlayerExtraEvents;
+import com.chaotic_loom.under_control.events.types.ServerPlayerExtraEvents;
 import com.chaotic_loom.under_control.util.FabricHelper;
+import com.chaotic_loom.under_control.util.MinecraftHelper;
 import com.chaotic_loom.under_control.util.RandomHelper;
 import com.restonic4.versatilesanity.compatibility.CompatibleMods;
 import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
+import com.restonic4.versatilesanity.modules.SleepHandler;
 import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -47,6 +53,32 @@ public class VersatileSanity implements ModInitializer {
 
         ServerLivingEntityEvents.ALLOW_DEATH.register(this::onPlayerAttackEntity);
 
+        LivingEntityExtraEvents.FISHING_HOOK_RETRIEVED.register((player, hook, itemStacks) -> {
+            if (player == null || player.level().isClientSide()) return EventResult.SUCCEEDED;
+
+            SanityEventHandler.onFishCaught(player, itemStacks);
+            return EventResult.SUCCEEDED;
+        });
+
+        ServerPlayerExtraEvents.ADVANCEMENT_GRANTED.register((serverPlayer, advancement, criterionName) -> {
+            if (MinecraftHelper.isNotInternal(advancement)) {
+                SanityEventHandler.onAdvancementMade(serverPlayer);
+            }
+
+            return EventResult.SUCCEEDED;
+        });
+
+        PlayerExtraEvents.DAMAGED.register((player, damageSource, amount) -> {
+            SanityEventHandler.onDamage(player, amount);
+        });
+
+        PlayerExtraEvents.SLEEPING_START.register((player, blockPos) -> {
+            SleepHandler.recordSleepStart(player);
+        });
+
+        PlayerExtraEvents.SLEEPING_STOPPED.register((player, bl, bl2) -> {
+            SleepHandler.handleSleepEnd(player);
+        });
 
         if (isModLoaded(CompatibleMods.TOUGH_AS_NAILS)) {
             ToughAsNailsCompatibility.onInitialize();
@@ -75,10 +107,6 @@ public class VersatileSanity implements ModInitializer {
 
     public boolean isCute(Entity entity) {
         return entity instanceof Wolf || entity instanceof Cat || entity instanceof Axolotl || entity instanceof Parrot || entity instanceof Sniffer;
-    }
-
-    public static void onEntityDamage(Player player, float amount) {
-        SanityEventHandler.onDamage(player, amount);
     }
 
     public static ResourceLocation id(String path) {

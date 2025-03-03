@@ -5,11 +5,15 @@ import com.restonic4.versatilesanity.VersatileSanity;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.util.Utils;
+import com.restonic4.versatilesanity.util.WaterMassDetector;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 public class SanityEventHandler {
     public static ResourceLocation FISH_LOOT_TABLE = new ResourceLocation("minecraft", "gameplay/fishing/fish");
@@ -134,18 +138,28 @@ public class SanityEventHandler {
         SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getPetIncreaseFactor());
     }
 
-    public static void onFishCaught(Player player, ItemStack item) {
-        int mult = 1;
+    public static void onFishCaught(Player player, List<ItemStack> items) {
+        MinecraftServer server = player.level().getServer();
 
-        if (Utils.isOnLootTable(item, JUNK_LOOT_TABLE, player.level().getServer())) {
-            mult = 0;
-        } else if (Utils.isOnLootTable(item, FISH_LOOT_TABLE, player.level().getServer())) {
-            mult = 1;
-        } else if (Utils.isOnLootTable(item, TREASURE_LOOT_TABLE, player.level().getServer())) {
-            mult = 2;
+        int accumulatedMult = 0;
+        int multAppliedTimes = 0;
+
+        for (ItemStack item : items) {
+            if (Utils.isOnLootTable(item, JUNK_LOOT_TABLE, server)) {
+                accumulatedMult += 0;
+                multAppliedTimes++;
+            } else if (Utils.isOnLootTable(item, FISH_LOOT_TABLE, server)) {
+                accumulatedMult += 1;
+                multAppliedTimes++;
+            } else if (Utils.isOnLootTable(item, TREASURE_LOOT_TABLE, server)) {
+                accumulatedMult += 2;
+                multAppliedTimes++;
+            }
         }
 
-        int value = config.getFishingIncreaseFactor() * mult;
+        int finalMult = accumulatedMult / multAppliedTimes;
+
+        int value = config.getFishingIncreaseFactor() * finalMult;
 
         System.out.println("[+] Fish " + value);
         SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(value);
@@ -176,5 +190,12 @@ public class SanityEventHandler {
     public static void onTemperatureTick(Player player) {
         System.out.println("[-] Temperature");
         SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getTemperatureDecreaseFactor());
+    }
+
+    public static void onOceanTick(Player player, WaterMassDetector.WaterMassDetectionResult result) {
+        float mult = (result.isSubmergedEnough()) ? config.getOceanSubmergedMult() : 1;
+
+        System.out.println("[-] Ocean");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus((int) (config.getOceanDecreaseFactor() * mult));
     }
 }

@@ -43,6 +43,7 @@ public class VersatileSanityConfig extends ModConfig {
     Reducción por estar bajo tierra: -2 cada 1200 ticks
     Reducción por nor dormir: -6 cada 1200 ticks multiplicado por la cantidad de tiempo sin dormir (Normalizado entre 0 y 1, 0 cuanto mas cerca de 1 dia, 1 cuanto mas cerca de 3 dias)
     Reducción por temperature (Tough as nails): -2 cada 1200 ticks
+    Reducción por estar en el oceano: -1 cada 80 ticks (Multiplicado x 3 si estas sumergido)
 
     Incremento cerca de aldeas: 1 cada 1200 ticks en un radio de 16 bloques
     Incremento al tener el estomago lleno: 2 cada 1200 ticks a partir del 50% de la barra llena (Se le aplica un multiplicador extra entre 0 y 1, cuanto mas cerca del porcentaje dado mas cerca de 0 esta, cuanto mas cerca del 100%, mas cerca del 1 es)
@@ -131,6 +132,10 @@ public class VersatileSanityConfig extends ModConfig {
 
         getServerConfig().registerOption("temperature_decrease_factor", 1, "How much sanity you lose with temperature");
         getServerConfig().registerOption("temperature_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+
+        getServerConfig().registerOption("ocean_decrease_factor", 1, "How much sanity you lose on the ocean");
+        getServerConfig().registerOption("ocean_check_ticks", 80, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("ocean_submerged_mult", 3, "Multiplication applied if completely submerged");
     }
 
     public int getMaxSanity() {
@@ -343,5 +348,17 @@ public class VersatileSanityConfig extends ModConfig {
 
     public int getTemperatureTicks() {
         return getServerConfig().get("temperature_check_ticks", Integer.class);
+    }
+
+    public int getOceanDecreaseFactor() {
+        return getServerConfig().get("ocean_decrease_factor", Integer.class);
+    }
+
+    public int getOceanTicks() {
+        return getServerConfig().get("ocean_check_ticks", Integer.class);
+    }
+
+    public int getOceanSubmergedMult() {
+        return getServerConfig().get("ocean_submerged_mult", Integer.class);
     }
 }

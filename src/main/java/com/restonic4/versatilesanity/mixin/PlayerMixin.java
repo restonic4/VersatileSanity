@@ -10,6 +10,7 @@ import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import com.restonic4.versatilesanity.modules.SleepHandler;
 import com.restonic4.versatilesanity.util.UndergroundDetector;
 import com.restonic4.versatilesanity.util.Utils;
+import com.restonic4.versatilesanity.util.WaterMassDetector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
@@ -103,24 +104,22 @@ public class PlayerMixin {
                     SanityEventHandler.onTemperatureTick(player);
                 }
             }
+
+            if (shouldTick(player, config.getOceanTicks())) {
+                WaterMassDetector.WaterMassDetectionResult result = WaterMassDetector.isInDeepOcean(serverPlayer);
+
+                if (result.isInDeepOcean()) {
+                    SanityEventHandler.onOceanTick(player, result);
+                }
+            }
+
+            int waterLevel = WaterMassDetector.calculateWaterDepth(serverPlayer.level(), serverPlayer.blockPosition());
+            boolean is = WaterMassDetector.isPlayerSubmergedEnough(serverPlayer, waterLevel);
+            boolean biome = WaterMassDetector.isInWaterBiome(serverPlayer);
+            boolean around = WaterMassDetector.hasEnoughWaterAround(serverPlayer.level(), serverPlayer.blockPosition());
+
+            System.out.println("Biome: " + biome + ", Around: " + around + ", Level: " + waterLevel + ", Submerged: " + is);
         }
-    }
-
-    @Inject(method = "actuallyHurt", at = @At("HEAD"))
-    public void hurt(DamageSource damageSource, float amount, CallbackInfo ci) {
-        VersatileSanity.onEntityDamage((Player) (Object) this, amount);
-    }
-
-    @Inject(method = "startSleepInBed", at = @At("RETURN"))
-    private void onStartSleepInBed(BlockPos blockPos, CallbackInfoReturnable<Either<Player.BedSleepingProblem, Unit>> cir) {
-        Player player = (Player) (Object) this;
-        SleepHandler.recordSleepStart(player);
-    }
-
-    @Inject(method = "stopSleepInBed", at = @At("HEAD"))
-    private void onStopSleepInBed(boolean bl, boolean bl2, CallbackInfo ci) {
-        Player player = (Player) (Object) this;
-        SleepHandler.handleSleepEnd(player);
     }
 
     @Unique

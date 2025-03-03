@@ -4,14 +4,11 @@
   "package": "com.restonic4.versatilesanity.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "FishingHookMixin",
-    "PlayerAdvancementsMixin",
     "PlayerMixin",
     "ServerPlayerGameModeMixin"
   ],
   "client": [
-    "GuiMixin",
-    "SoundEngineMixin"
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1
