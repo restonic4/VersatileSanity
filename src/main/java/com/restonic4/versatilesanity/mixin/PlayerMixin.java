@@ -112,15 +112,6 @@ public class PlayerMixin {
                     SanityEventHandler.onOceanTick(player, result);
                 }
             }
-
-            /*int waterLevel = WaterMassDetector.calculateWaterDepth(serverPlayer.level(), serverPlayer.blockPosition());
-            boolean is = WaterMassDetector.isPlayerSubmergedEnough(serverPlayer, waterLevel);
-            boolean biome = WaterMassDetector.isInWaterBiome(serverPlayer);
-            boolean around = WaterMassDetector.hasEnoughWaterAround(serverPlayer.level(), serverPlayer.blockPosition());
-
-            System.out.println("Biome: " + biome + ", Around: " + around + ", Level: " + waterLevel + ", Submerged: " + is + ", Water: " + serverPlayer.isInWater());*/
-            WaterMassDetector.WaterMassDetectionResult result = WaterMassDetector.isInDeepOcean(serverPlayer);
-            System.out.println("Ocean: " + result.isInDeepOcean() + ", Submerged: " + result.isSubmergedEnough() + ", Trust: " + result.threshold());
         }
     }
 

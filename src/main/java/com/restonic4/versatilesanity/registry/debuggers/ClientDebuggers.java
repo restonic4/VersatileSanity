@@ -10,12 +10,19 @@ import com.restonic4.versatilesanity.VersatileSanity;
 @Registration(side = ExecutionSide.CLIENT)
 public class ClientDebuggers {
     public static OceanDebugger OCEAN;
+    public static CaveDebugger CAVE;
 
     public static void register() {
         OCEAN = (OceanDebugger) UnderControlRegistry.register(
                 UnderControlRegistries.DEBUGGER,
                 new ObjectIdentifier(VersatileSanity.MOD_ID, "ocean"),
                 new OceanDebugger(ExecutionSide.CLIENT)
+        );
+
+        CAVE = (CaveDebugger) UnderControlRegistry.register(
+                UnderControlRegistries.DEBUGGER,
+                new ObjectIdentifier(VersatileSanity.MOD_ID, "cave"),
+                new CaveDebugger(ExecutionSide.CLIENT)
         );
     }
 }

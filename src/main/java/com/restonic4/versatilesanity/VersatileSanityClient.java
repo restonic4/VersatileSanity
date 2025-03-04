@@ -39,6 +39,12 @@ public class VersatileSanityClient implements ClientModInitializer {
             } else {
                 ClientDebuggers.OCEAN.disable();
             }
+
+            if (config.getDebugCave()) {
+                ClientDebuggers.CAVE.enable();
+            } else {
+                ClientDebuggers.CAVE.disable();
+            }
         });
     }
 }

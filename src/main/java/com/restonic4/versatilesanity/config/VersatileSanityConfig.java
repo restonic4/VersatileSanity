@@ -11,10 +11,15 @@ public class VersatileSanityConfig extends ModConfig {
     @Override
     protected void registerClientOptions() {
         getClientConfig().registerOption("debug_ocean", false, "Rendering debug data for the ocean detector");
+        getClientConfig().registerOption("debug_cave", false, "Rendering debug data for the cave detector");
     }
 
     public boolean getDebugOcean() {
         return getClientConfig().get("debug_ocean", Boolean.class);
+    }
+
+    public boolean getDebugCave() {
+        return getClientConfig().get("debug_cave", Boolean.class);
     }
 
     /*
