@@ -17,9 +17,13 @@ import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,6 +36,9 @@ import net.minecraft.world.entity.animal.sniffer.Sniffer;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class VersatileSanity implements ModInitializer {
     public static final String MOD_ID = "versatilesanity";
@@ -78,6 +85,29 @@ public class VersatileSanity implements ModInitializer {
 
         PlayerExtraEvents.SLEEPING_STOPPED.register((player, bl, bl2) -> {
             SleepHandler.handleSleepEnd(player);
+        });
+
+        //TODO: MINECARTS
+        UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
+            if (level.isClientSide()) return InteractionResult.PASS;
+
+            BlockPos blockPos = hitResult.getBlockPos();
+            BlockState blockState = level.getBlockState(blockPos);
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+
+            // Comprueba si es un contenedor con loot table
+            if (blockEntity instanceof RandomizableContainerBlockEntity containerEntity) {
+                // Verifica si la loot table aún no ha sido generada
+
+                //No es ideal, ya que la loottable solo se hace null las proximas veces que lo abras
+                if (containerEntity.lootTable == null) {
+                    System.out.println("LootTable null");
+                } else {
+                    System.out.println("LootTable exists");
+                }
+            }
+
+            return InteractionResult.PASS;
         });
 
         if (isModLoaded(CompatibleMods.TOUGH_AS_NAILS)) {

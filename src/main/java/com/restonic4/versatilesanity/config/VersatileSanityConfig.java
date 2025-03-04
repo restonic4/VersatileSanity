@@ -23,12 +23,20 @@ public class VersatileSanityConfig extends ModConfig {
     }
 
     /*
+    Tengo una mecánica en mi mod de Minecraft, cordura, siento que faltan posibles metodos/aciones/eventos en los que la cordura suba o baje.
+    Dame mas ideas, ya sean vanilla o compatibilidad con otros mods.
 
-    Tengo una mecánica en mi mod de Minecraft, el problema es que no se como balancearla, hay mil valores, es una mecánica de cordura, hay muchas cosas que dan o restan.
+    Eventos actuales:
+
+    ###########
+
+    Tengo una mecánica en mi mod de Minecraft, cordura, el problema es que no se como balancearla, hay mil valores, hay muchas cosas que dan o restan cordura.
 
     ¿Hay algún método o planificación eficaz que pueda usar para poner unos valores aceptables?
 
     Valores de ejemplo:
+
+    ###########
 
     Sanity maxima = 100
     Sanity al unirte por primera vez = 100
