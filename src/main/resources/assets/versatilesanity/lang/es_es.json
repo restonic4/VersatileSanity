@@ -2,16 +2,81 @@
   "gui.versatilesanity.config.option.starting_sanity_value": "Cordura inicial.",
   "gui.versatilesanity.config.option.max_sanity_value": "Cordura maxima.",
   "gui.versatilesanity.config.option.respawn_sanity_value": "Cordura al Re-spawnear.",
+
   "gui.versatilesanity.config.option.darkness_exposure_decrease_factor": "Factor decreciente expuesto a la oscuridad.",
   "gui.versatilesanity.config.option.darkness_exposure_ticks": "Ticks en la oscuridad.",
+
   "gui.versatilesanity.config.option.hostile_exposure_decrease_factor": "Factor decreciente expuesto a mobs hostiles.",
   "gui.versatilesanity.config.option.hostile_check_ticks": "Ticks cerca de mobs hostiles.",
   "gui.versatilesanity.config.option.hostile_check_radius": "Area de comprobación de mobs hostiles.",
+
   "gui.versatilesanity.config.option.village_exposure_increase_factor": "Factor creciente expuesto a villas",
   "gui.versatilesanity.config.option.village_check_ticks": "Ticks cerca de aldea.",
   "gui.versatilesanity.config.option.village_check_radius": "Area de comprobación de aldeas.",
+
   "gui.versatilesanity.config.option.portal_exposure_decrease_factor": "Factor decreciente expuesto a portales.",
   "gui.versatilesanity.config.option.portal_check_ticks": "Ticks cerca de portal.",
   "gui.versatilesanity.config.option.portal_check_radius": "Area de comprobación de portales.",
-  "gui.versatilesanity.config.option.scary_sound_decrease_factor": "Factor decreciente al escuchar algo raro."
+
+  "gui.versatilesanity.config.option.scary_sound_decrease_factor": "Factor decreciente al escuchar algo raro.",
+
+  "gui.versatilesanity.config.option.rain_decrease_factor": "Factor de disminución de la lluvia.",
+  "gui.versatilesanity.config.option.rain_check_ticks": "Ticks de comprobación de la lluvia.",
+
+  "gui.versatilesanity.config.option.thunder_decrease_factor": "Factor de disminución de la tormenta eléctrica.",
+
+  "gui.versatilesanity.config.option.nether_decrease_factor": "Factor de disminución del Nether.",
+  "gui.versatilesanity.config.option.nether_check_ticks": "Ticks de comprobación del Nether.",
+
+  "gui.versatilesanity.config.option.end_decrease_factor": "El factor de disminución del End.",
+  "gui.versatilesanity.config.option.end_check_ticks": "Ticks de comprobación del End.",
+
+  "gui.versatilesanity.config.option.damage_decrease_factor": "Factor de disminución al dañarse.",
+
+  "gui.versatilesanity.config.option.kill_animal_decrease_factor": "Factor de disminución por matar animales.",
+  "gui.versatilesanity.config.option.kill_villager_decrease_factor": "Factor de disminución por matar aldeanos.",
+  "gui.versatilesanity.config.option.kill_player_decrease_factor": "Factor de disminución por matar jugadores.",
+  "gui.versatilesanity.config.option.kill_cute_decrease_factor": "Factor de disminución por matar criaturas adorables.",
+
+  "gui.versatilesanity.config.option.alone_decrease_factor": "Factor de disminución por estar solo.",
+  "gui.versatilesanity.config.option.alone_check_ticks": "Ticks de comprobación de estar solo.",
+  "gui.versatilesanity.config.option.alone_check_radius": "Radio de comprobación de estar solo.",
+
+  "gui.versatilesanity.config.option.underground_decrease_factor": "Factor de disminución bajo tierra.",
+  "gui.versatilesanity.config.option.underground_check_ticks": "Ticks de comprobación bajo tierra.",
+
+  "gui.versatilesanity.config.option.satiety_increase_factor": "Factor de aumento al saciarse.",
+  "gui.versatilesanity.config.option.satiety_check_ticks": "Ticks de comprobación al saciarse.",
+  "gui.versatilesanity.config.option.satiety_threshold": "Umbral de saciedad.",
+
+  "gui.versatilesanity.config.option.sleep_increase_factor": "Factor de aumento por dormir.",
+
+  "gui.versatilesanity.config.option.sleep_deprived_decrease_factor": "Factor de disminución por privación de sueño.",
+  "gui.versatilesanity.config.option.sleep_deprived_check_ticks": "Ticks de comprobación de privación de sueño.",
+
+  "gui.versatilesanity.config.option.near_boss_decrease_factor": "Factor de disminución por estar cerca de un jefe.",
+  "gui.versatilesanity.config.option.near_boss_check_ticks": "Ticks de comprobación del jefe.",
+  "gui.versatilesanity.config.option.near_boss_check_radius": "Radio de comprobación del jefe.",
+
+  "gui.versatilesanity.config.option.near_pet_increase_factor": "Factor de aumento por mascota.",
+  "gui.versatilesanity.config.option.near_pet_check_ticks": "Ticks de comprobación de mascota.",
+  "gui.versatilesanity.config.option.near_pet_check_radius": "Radio de comprobación de mascota.",
+
+  "gui.versatilesanity.config.option.fishing_increase_factor": "Factor de aumento por pescar.",
+  "gui.versatilesanity.config.option.planting_increase_factor": "Factor de aumento al plantar.",
+
+  "gui.versatilesanity.config.option.music_increase_factor": "Factor de aumento al escuchar música.",
+  "gui.versatilesanity.config.option.music_check_ticks": "Ticks de comprobación de música.",
+  "gui.versatilesanity.config.option.music_check_radius": "Radio de comprobación de música.",
+
+  "gui.versatilesanity.config.option.advancement_increase_factor": "Factor de aumento por logros.",
+
+  "gui.versatilesanity.config.option.temperature_decrease_factor": "Factor de disminución de la temperatura.",
+  "gui.versatilesanity.config.option.temperature_check_ticks": "Ticks de comprobación de la temperatura.",
+
+  "gui.versatilesanity.config.option.ocean_decrease_factor": "Factor de disminución del océano.",
+  "gui.versatilesanity.config.option.ocean_check_ticks": "Ticks de comprobación del océano.",
+  "gui.versatilesanity.config.option.ocean_submerged_mult": "Multiplicación de disminución por inmersión en el océano.",
+
+  "gui.versatilesanity.config.option.new_loot_factor": "Factor al encontrar nuevo loot."
 }

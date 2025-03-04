@@ -2,16 +2,81 @@
   "gui.versatilesanity.config.option.starting_sanity_value": "Starting sanity value.",
   "gui.versatilesanity.config.option.max_sanity_value": "Max sanity value.",
   "gui.versatilesanity.config.option.respawn_sanity_value": "Re-spawn sanity value.",
+
   "gui.versatilesanity.config.option.darkness_exposure_decrease_factor": "Darkness exposure decrease factor.",
   "gui.versatilesanity.config.option.darkness_exposure_ticks": "Darkness exposure ticks.",
+
   "gui.versatilesanity.config.option.hostile_exposure_decrease_factor": "Hostile mobs exposure decrease factor.",
   "gui.versatilesanity.config.option.hostile_check_ticks": "Hostile mobs exposure ticks.",
   "gui.versatilesanity.config.option.hostile_check_radius": "Hostile mobs check radius.",
+
   "gui.versatilesanity.config.option.village_exposure_increase_factor": "Village exposure gain factor.",
   "gui.versatilesanity.config.option.village_check_ticks": "Village exposure ticks.",
   "gui.versatilesanity.config.option.village_check_radius": "Villages check radius.",
+
   "gui.versatilesanity.config.option.portal_exposure_decrease_factor": "Portal exposure decrease factor.",
   "gui.versatilesanity.config.option.portal_check_ticks": "Portal exposure ticks.",
   "gui.versatilesanity.config.option.portal_check_radius": "Portals check radius.",
-  "gui.versatilesanity.config.option.scary_sound_decrease_factor": "Strange sound decrease factor."
+
+  "gui.versatilesanity.config.option.scary_sound_decrease_factor": "Strange sound decrease factor.",
+
+  "gui.versatilesanity.config.option.rain_decrease_factor": "Rain decrease factor.",
+  "gui.versatilesanity.config.option.rain_check_ticks": "Rain check ticks.",
+
+  "gui.versatilesanity.config.option.thunder_decrease_factor": "Thunder storm decrease factor.",
+
+  "gui.versatilesanity.config.option.nether_decrease_factor": "Nether decrease factor.",
+  "gui.versatilesanity.config.option.nether_check_ticks": "Nether check ticks.",
+
+  "gui.versatilesanity.config.option.end_decrease_factor": "The end decrease factor.",
+  "gui.versatilesanity.config.option.end_check_ticks": "The end check ticks.",
+
+  "gui.versatilesanity.config.option.damage_decrease_factor": "Damage decrease factor.",
+
+  "gui.versatilesanity.config.option.kill_animal_decrease_factor": "Kill animal decrease factor.",
+  "gui.versatilesanity.config.option.kill_villager_decrease_factor": "Kill villager decrease factor.",
+  "gui.versatilesanity.config.option.kill_player_decrease_factor": "Kill player decrease factor.",
+  "gui.versatilesanity.config.option.kill_cute_decrease_factor": "Kill cute creatures decrease factor.",
+
+  "gui.versatilesanity.config.option.alone_decrease_factor": "Being alone decrease factor.",
+  "gui.versatilesanity.config.option.alone_check_ticks": "Being alone check ticks.",
+  "gui.versatilesanity.config.option.alone_check_radius": "Being alone check radius.",
+
+  "gui.versatilesanity.config.option.underground_decrease_factor": "Underground decrease factor.",
+  "gui.versatilesanity.config.option.underground_check_ticks": "Underground check ticks.",
+
+  "gui.versatilesanity.config.option.satiety_increase_factor": "Satiety increase factor.",
+  "gui.versatilesanity.config.option.satiety_check_ticks": "Satiety check ticks.",
+  "gui.versatilesanity.config.option.satiety_threshold": "Satiety threshold.",
+
+  "gui.versatilesanity.config.option.sleep_increase_factor": "Sleeping increase factor.",
+
+  "gui.versatilesanity.config.option.sleep_deprived_decrease_factor": "Sleep deprived decrease factor.",
+  "gui.versatilesanity.config.option.sleep_deprived_check_ticks": "Sleep deprived check ticks.",
+
+  "gui.versatilesanity.config.option.near_boss_decrease_factor": "Boss decrease factor.",
+  "gui.versatilesanity.config.option.near_boss_check_ticks": "Boss check ticks.",
+  "gui.versatilesanity.config.option.near_boss_check_radius": "Boss check radius.",
+
+  "gui.versatilesanity.config.option.near_pet_increase_factor": "Pet increase factor.",
+  "gui.versatilesanity.config.option.near_pet_check_ticks": "Pet check ticks.",
+  "gui.versatilesanity.config.option.near_pet_check_radius": "Pet check radius.",
+
+  "gui.versatilesanity.config.option.fishing_increase_factor": "Fishing increase factor.",
+  "gui.versatilesanity.config.option.planting_increase_factor": "Planting increase factor.",
+
+  "gui.versatilesanity.config.option.music_increase_factor": "Music increase factor.",
+  "gui.versatilesanity.config.option.music_check_ticks": "Music check ticks.",
+  "gui.versatilesanity.config.option.music_check_radius": "Music check radius.",
+
+  "gui.versatilesanity.config.option.advancement_increase_factor": "Advancement increase factor.",
+
+  "gui.versatilesanity.config.option.temperature_decrease_factor": "Temperature decrease factor.",
+  "gui.versatilesanity.config.option.temperature_check_ticks": "Temperature check ticks.",
+
+  "gui.versatilesanity.config.option.ocean_decrease_factor": "Ocean decrease factor.",
+  "gui.versatilesanity.config.option.ocean_check_ticks": "Ocean check ticks.",
+  "gui.versatilesanity.config.option.ocean_submerged_mult": "Ocean submersion decrease multiplication.",
+
+  "gui.versatilesanity.config.option.new_loot_factor": "Loot found factor."
 }

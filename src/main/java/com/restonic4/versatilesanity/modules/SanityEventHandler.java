@@ -4,6 +4,7 @@ import com.chaotic_loom.under_control.util.RandomHelper;
 import com.restonic4.versatilesanity.VersatileSanity;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
+import com.restonic4.versatilesanity.util.LootQualityChecker;
 import com.restonic4.versatilesanity.util.Utils;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
 import net.minecraft.resources.ResourceLocation;
@@ -168,7 +169,7 @@ public class SanityEventHandler {
     public static void onCropPlanted(ServerPlayer serverPlayer, BlockState placedState) {
         if (RandomHelper.randomBetween(0, 100) <= 25) {
             System.out.println("[+] Crop planted");
-            SanityStatusComponents.SANITY_STATUS.get(serverPlayer).incrementSanityStatus(config.getPlatingIncreaseFactor());
+            SanityStatusComponents.SANITY_STATUS.get(serverPlayer).incrementSanityStatus(config.getPlantingIncreaseFactor());
         }
     }
 
@@ -197,5 +198,29 @@ public class SanityEventHandler {
 
         System.out.println("[-] Ocean");
         SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus((int) (config.getOceanDecreaseFactor() * mult));
+    }
+
+    public static void onNewLootFound(Player player, LootQualityChecker.Quality quality) {
+        float value = config.getNewLootFactor();
+
+        if (quality == LootQualityChecker.Quality.TERRIBLE) {
+            value = value * -2;
+        } else if (quality == LootQualityChecker.Quality.BAD) {
+            value = value * -1;
+        } else if (quality == LootQualityChecker.Quality.NORMAL) {
+            value = value * 1;
+        } else if (quality == LootQualityChecker.Quality.GOOD) {
+            value = value * 2;
+        } else if (quality == LootQualityChecker.Quality.AMAZING) {
+            value = value * 3;
+        }
+
+        if (value < 0) {
+            System.out.println("[-] New loot");
+        } else {
+            System.out.println("[+] New loot");
+        }
+
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus((int) value);
     }
 }

@@ -345,7 +345,7 @@ public class Utils {
                     if (!discStack.isEmpty() && discStack.getItem() instanceof RecordItem recordItem) {
                         ResourceLocation discId = BuiltInRegistries.ITEM.getKey(recordItem);
 
-                        if ("minecraft:music_disc_13".equals(discId.toString())) {
+                        if (isMusicDiscBadForSanity(discId.toString())) {
                             result[0] = true;
                             result[1] = true;
                         } else {
@@ -358,5 +358,17 @@ public class Utils {
         });
 
         return result;
+    }
+
+    public static boolean isMusicDiscBadForSanity(String discId) {
+        if ("minecraft:music_disc_13".equals(discId.toString())) {
+            return true;
+        } else if("minecraft:music_disc_11".equals(discId.toString())) {
+            return true;
+        } else if("minecraft:music_disc_5".equals(discId.toString())) {
+            return true;
+        }
+
+        return false;
     }
 }

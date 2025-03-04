@@ -2,6 +2,7 @@ package com.restonic4.versatilesanity;
 
 import com.chaotic_loom.under_control.events.EventResult;
 import com.chaotic_loom.under_control.events.types.LivingEntityExtraEvents;
+import com.chaotic_loom.under_control.events.types.OtherEvents;
 import com.chaotic_loom.under_control.events.types.PlayerExtraEvents;
 import com.chaotic_loom.under_control.events.types.ServerPlayerExtraEvents;
 import com.chaotic_loom.under_control.util.FabricHelper;
@@ -14,6 +15,7 @@ import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import com.restonic4.versatilesanity.modules.SleepHandler;
 import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
+import com.restonic4.versatilesanity.util.LootQualityChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -87,7 +89,9 @@ public class VersatileSanity implements ModInitializer {
             SleepHandler.handleSleepEnd(player);
         });
 
-        //TODO: USAR EVENTO CUSTOM NUEVO DE LOOTTABLES
+        OtherEvents.LOOT_CONTAINER_GENERATED_LOOT.register((player, lootTable, container, isEntityContainer) -> {
+            SanityEventHandler.onNewLootFound(player, LootQualityChecker.getQuality(container));
+        });
 
         if (isModLoaded(CompatibleMods.TOUGH_AS_NAILS)) {
             ToughAsNailsCompatibility.onInitialize();

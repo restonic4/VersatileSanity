@@ -71,6 +71,8 @@ public class VersatileSanityConfig extends ModConfig {
     Incremento al escuchar discos de musica: 1 cada 600 ticks en un radio de 24 bloques
     Incremento al obtener un logro: 6
 
+    Incremento o Reduction al encontrar loot en cofres: Terrible: -2, Malo: -1, Normal: 1, Bueno: 2, Increible: 3 (Calidad del loot)
+
      */
 
     @Override
@@ -139,7 +141,7 @@ public class VersatileSanityConfig extends ModConfig {
         getServerConfig().registerOption("near_pet_check_radius", 24, "Radius in which the pets are detected");
 
         getServerConfig().registerOption("fishing_increase_factor", 2, "How much sanity you gain by fishing");
-        getServerConfig().registerOption("plating_increase_factor", 1, "How much sanity you gain by plating");
+        getServerConfig().registerOption("planting_increase_factor", 1, "How much sanity you gain by plating");
 
         getServerConfig().registerOption("music_increase_factor", 1, "How much sanity you gain by listing music disc");
         getServerConfig().registerOption("music_check_ticks", 600, "Every this amount of ticks the sanity gain is applied");
@@ -153,6 +155,8 @@ public class VersatileSanityConfig extends ModConfig {
         getServerConfig().registerOption("ocean_decrease_factor", 1, "How much sanity you lose on the ocean");
         getServerConfig().registerOption("ocean_check_ticks", 80, "Every this amount of ticks the sanity reduction is applied");
         getServerConfig().registerOption("ocean_submerged_mult", 3, "Multiplication applied if completely submerged");
+
+        getServerConfig().registerOption("new_loot_factor", 1, "How much sanity you lose/gain when you find new loot");
     }
 
     public int getMaxSanity() {
@@ -339,8 +343,8 @@ public class VersatileSanityConfig extends ModConfig {
         return getServerConfig().get("fishing_increase_factor", Integer.class);
     }
 
-    public int getPlatingIncreaseFactor() {
-        return getServerConfig().get("plating_increase_factor", Integer.class);
+    public int getPlantingIncreaseFactor() {
+        return getServerConfig().get("planting_increase_factor", Integer.class);
     }
 
     public int getMusicIncreaseFactor() {
@@ -377,5 +381,9 @@ public class VersatileSanityConfig extends ModConfig {
 
     public int getOceanSubmergedMult() {
         return getServerConfig().get("ocean_submerged_mult", Integer.class);
+    }
+
+    public int getNewLootFactor() {
+        return getServerConfig().get("new_loot_factor", Integer.class);
     }
 }
