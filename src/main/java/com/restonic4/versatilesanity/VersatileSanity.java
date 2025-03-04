@@ -87,28 +87,7 @@ public class VersatileSanity implements ModInitializer {
             SleepHandler.handleSleepEnd(player);
         });
 
-        //TODO: MINECARTS
-        UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
-            if (level.isClientSide()) return InteractionResult.PASS;
-
-            BlockPos blockPos = hitResult.getBlockPos();
-            BlockState blockState = level.getBlockState(blockPos);
-            BlockEntity blockEntity = level.getBlockEntity(blockPos);
-
-            // Comprueba si es un contenedor con loot table
-            if (blockEntity instanceof RandomizableContainerBlockEntity containerEntity) {
-                // Verifica si la loot table aún no ha sido generada
-
-                //No es ideal, ya que la loottable solo se hace null las proximas veces que lo abras
-                if (containerEntity.lootTable == null) {
-                    System.out.println("LootTable null");
-                } else {
-                    System.out.println("LootTable exists");
-                }
-            }
-
-            return InteractionResult.PASS;
-        });
+        //TODO: USAR EVENTO CUSTOM NUEVO DE LOOTTABLES
 
         if (isModLoaded(CompatibleMods.TOUGH_AS_NAILS)) {
             ToughAsNailsCompatibility.onInitialize();
