@@ -148,5 +148,31 @@ public class VersatileSanity implements ModInitializer {
     oceano
     blood moon
     temperatura
+
+
+
+< 50
+Sonidos de cueva y ocean adittions * 2 chance
+Sonidos creepy leves sonaran random
+Se ve algo mas gris
+
+< 35
+Sonidos creepy normales soanran random
+Susurros ocasionales
+Se ve algo mas gris
+Corazon late poco y flojo
+
+< 25
+Susurros frecuentes
+Se ve bastante mas gris
+Desorintacion temporal leve
+Sonidos de pasos
+Corazon late mas
+
+< 15
+Desorintacion temporal severa
+Desorientación climatica
+Corazon late mas
+
      */
 }
