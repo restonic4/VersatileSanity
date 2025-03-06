@@ -4,8 +4,13 @@
   "package": "com.restonic4.versatilesanity.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AbstractVillagerMixin",
+    "AnimalMixin",
+    "LivingEntityMixin",
+    "ParrotMixin",
     "PlayerMixin",
-    "ServerPlayerGameModeMixin"
+    "ServerPlayerGameModeMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
     "GuiMixin"

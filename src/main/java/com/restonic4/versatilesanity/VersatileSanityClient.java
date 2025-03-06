@@ -7,19 +7,25 @@ import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
 import com.chaotic_loom.under_control.events.EventResult;
 import com.chaotic_loom.under_control.events.types.ClientEvents;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.CaveSoundHandler;
 import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.PostChain;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VersatileSanityClient implements ClientModInitializer {
     private VersatileSanityConfig config = VersatileSanity.getConfig();
+
+    private static PostChain greyscaleChain;
 
     @Override
     public void onInitializeClient() {
@@ -46,5 +52,11 @@ public class VersatileSanityClient implements ClientModInitializer {
                 ClientDebuggers.CAVE.disable();
             }
         });
+
+        Minecraft mc = Minecraft.getInstance();
+        mc.execute(() -> {
+            mc.gameRenderer.loadEffect(new ResourceLocation(VersatileSanity.MOD_ID, "shaders/post/greyscale.json"));
+        });
+
     }
 }

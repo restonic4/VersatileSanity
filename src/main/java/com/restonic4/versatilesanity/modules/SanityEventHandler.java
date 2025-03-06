@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -222,5 +223,50 @@ public class SanityEventHandler {
         }
 
         SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus((int) value);
+    }
+
+    public static void onExperienceLevel(Player player, int levels) {
+        if (levels < 0) {
+            System.out.println("[-] Experience level");
+            SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getNewExperienceLevelIncreaseFactor() * (levels / 3));
+        } else {
+            System.out.println("[+] Experience level");
+            SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getNewExperienceLevelIncreaseFactor() * levels);
+        }
+    }
+
+    public static void onCobWebTick(Player player) {
+        System.out.println("[-] Cobweb");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getReducedMovementDecreaseFactor());
+    }
+
+    public static void onSpecialFoodEaten(Player player, boolean good) {
+        if (good) {
+            System.out.println("[+] Special food eaten");
+            SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getEatingSpecialFactor());
+        } else {
+            System.out.println("[-] Special food eaten");
+            SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getEatingSpecialFactor());
+        }
+    }
+
+    public static void onTeleport(Player player) {
+        System.out.println("[-] Teleport");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getTeleportedDecreaseFactor());
+    }
+
+    public static void onVillagerTrade(Player player) {
+        System.out.println("[+] Villager trade");
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getVillagerTradeIncreaseFactor());
+    }
+
+    public static void onAnimalFeed(Player player) {
+        System.out.println("[+] Animal feed");
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getAnimalFeedIncreaseFactor());
+    }
+
+    public static void onParrotPoisoned(Player player) {
+        System.out.println("[-] Parrot poisoned");
+        SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getAnimalFeedIncreaseFactor());
     }
 }

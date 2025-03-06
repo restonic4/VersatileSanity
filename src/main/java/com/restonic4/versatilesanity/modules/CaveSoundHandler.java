@@ -23,6 +23,18 @@ public class CaveSoundHandler {
             new ResourceLocation("minecraft:ambient.underwater.loop.additions.ultra_rare")
     );
 
+    private static final Set<ResourceLocation> LOW_SANITY_SOUNDS = Set.of(
+            new ResourceLocation("minecraft:ambient.cave"),
+            new ResourceLocation("minecraft:ambient.basalt_deltas.mood"),
+            new ResourceLocation("minecraft:ambient.crimson_forest.mood"),
+            new ResourceLocation("minecraft:ambient.soul_sand_valley.mood"),
+            new ResourceLocation("minecraft:ambient.soul_sand_valley.additions"),
+            new ResourceLocation("minecraft:ambient.warped_forest.mood"),
+            new ResourceLocation("minecraft:ambient.nether_wastes.mood"),
+            new ResourceLocation("minecraft:ambient.underwater.loop.additions.rare"),
+            new ResourceLocation("minecraft:ambient.underwater.loop.additions.ultra_rare")
+    );
+
     public static void checkCaveSound(SoundInstance sound) {
         if (sound != null && isCaveSound(sound.getLocation())) {
             Minecraft client = Minecraft.getInstance();

@@ -112,7 +112,16 @@ public class PlayerMixin {
                     SanityEventHandler.onOceanTick(player, result);
                 }
             }
+
+            if (shouldTick(player, config.getReducedMovementTicks()) && Utils.isPlayerMoving(player) && Utils.isInCobweb(player)) {
+                SanityEventHandler.onCobWebTick(player);
+            }
         }
+    }
+
+    @Inject(method = "giveExperienceLevels", at = @At("HEAD"))
+    public void giveExperienceLevels(int levels, CallbackInfo ci) {
+        SanityEventHandler.onExperienceLevel((Player) (Object) this, levels);
     }
 
     @Unique

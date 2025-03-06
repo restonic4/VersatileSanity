@@ -371,4 +371,25 @@ public class Utils {
 
         return false;
     }
+
+    public static boolean isInCobweb(Player player) {
+        Level world = player.level();
+        AABB boundingBox = player.getBoundingBox();
+
+        for (BlockPos pos : BlockPos.betweenClosed(
+                BlockPos.containing(boundingBox.minX, boundingBox.minY, boundingBox.minZ),
+                BlockPos.containing(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ))
+        ) {
+            BlockState state = world.getBlockState(pos);
+            if (state.getBlock() instanceof WebBlock) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Entity.deltaMovement sucks so bad, it's so broken, it does not update in weird case escenarios.
+    public static boolean isPlayerMoving(Player player) {
+        return ((MovingTracker) player).versatileSanity$isMoving();
+    }
 }

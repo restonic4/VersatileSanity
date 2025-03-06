@@ -10,8 +10,8 @@ public class VersatileSanityConfig extends ModConfig {
 
     @Override
     protected void registerClientOptions() {
-        getClientConfig().registerOption("debug_ocean", false, "Rendering debug data for the ocean detector");
-        getClientConfig().registerOption("debug_cave", false, "Rendering debug data for the cave detector");
+        getClientConfig().registerOption("debug", "debug_ocean", false);
+        getClientConfig().registerOption("debug", "debug_cave", false);
     }
 
     public boolean getDebugOcean() {
@@ -61,6 +61,9 @@ public class VersatileSanityConfig extends ModConfig {
     Reducción por nor dormir: -6 cada 1200 ticks multiplicado por la cantidad de tiempo sin dormir (Normalizado entre 0 y 1, 0 cuanto mas cerca de 1 dia, 1 cuanto mas cerca de 3 dias)
     Reducción por temperature (Tough as nails): -2 cada 1200 ticks
     Reducción por estar en el oceano: -1 cada 80 ticks (Multiplicado x 3 si estas sumergido)
+    Reducción por caminar en cobweb
+    Reducción al tp
+    Reducción al alimentar una galleta a un loro
 
     Incremento cerca de aldeas: 1 cada 1200 ticks en un radio de 16 bloques
     Incremento al tener el estomago lleno: 2 cada 1200 ticks a partir del 50% de la barra llena (Se le aplica un multiplicador extra entre 0 y 1, cuanto mas cerca del porcentaje dado mas cerca de 0 esta, cuanto mas cerca del 100%, mas cerca del 1 es)
@@ -70,93 +73,105 @@ public class VersatileSanityConfig extends ModConfig {
     Incremento al plantar: 1 cada cultivo (Se aplica un % aleatorio de veces, no siempre se aplica)
     Incremento al escuchar discos de musica: 1 cada 600 ticks en un radio de 24 bloques
     Incremento al obtener un logro: 6
+    Incremento al obtener 1 nivel de experiencia: 1
+    Incremento al tradear con aldeanos
+    Incremento al alimentar animales
 
     Incremento o Reduction al encontrar loot en cofres: Terrible: -2, Malo: -1, Normal: 1, Bueno: 2, Increible: 3 (Calidad del loot)
+    Incremento o reduction al comer items especiales, rotten flesh, golden apple...
 
      */
 
     @Override
     protected void registerServerOptions() {
-        getServerConfig().registerOption("global", "starting_sanity_value", 100);
-        getServerConfig().registerOption("global", "max_sanity_value", 100);
+        getServerConfig().registerOption("global", "starting_sanity_value", 1000);
+        getServerConfig().registerOption("global", "max_sanity_value", 1000);
         getServerConfig().registerOption("global", "respawn_sanity_value", 0);
 
-        getServerConfig().registerOption("darkness", "darkness_exposure_decrease_factor", 2, "How much sanity you lose at darkness");
-        getServerConfig().registerOption("darkness", "darkness_exposure_ticks", 200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("darkness", "darkness_exposure_decrease_factor", 2);
+        getServerConfig().registerOption("darkness", "darkness_exposure_ticks", 200);
 
-        getServerConfig().registerOption("hostile_mobs", "hostile_exposure_decrease_factor", 1, "How much sanity you lose near hostile mobs");
-        getServerConfig().registerOption("hostile_mobs", "hostile_check_ticks", 30, "Every this amount of ticks the sanity reduction is applied");
-        getServerConfig().registerOption("hostile_mobs", "hostile_check_radius", 24, "Radius in which the hostile mobs are detected");
+        getServerConfig().registerOption("hostile_mobs", "hostile_exposure_decrease_factor", 4);
+        getServerConfig().registerOption("hostile_mobs", "hostile_check_ticks", 50);
+        getServerConfig().registerOption("hostile_mobs", "hostile_check_radius", 24);
 
-        getServerConfig().registerOption("village", "village_exposure_increase_factor", 1, "How much sanity you gain near a village");
-        getServerConfig().registerOption("village", "village_check_ticks", 1200, "Every this amount of ticks the sanity gain is applied");
-        getServerConfig().registerOption("village", "village_check_radius", 16, "Radius in which the villages are detected");
+        getServerConfig().registerOption("village", "village_exposure_increase_factor", 1);
+        getServerConfig().registerOption("village", "village_check_ticks", 1200);
+        getServerConfig().registerOption("village", "village_check_radius", 16);
+        getServerConfig().registerOption("village", "villager_trade_increase_factor", 2);
 
-        getServerConfig().registerOption("portals", "portal_exposure_decrease_factor", 1, "How much sanity you lose near a portal");
-        getServerConfig().registerOption("portals", "portal_check_ticks", 200, "Every this amount of ticks the sanity reduction is applied");
-        getServerConfig().registerOption("portals", "portal_check_radius", 14, "Radius in which the portals are detected");
+        getServerConfig().registerOption("portals", "portal_exposure_decrease_factor", 2);
+        getServerConfig().registerOption("portals", "portal_check_ticks", 200);
+        getServerConfig().registerOption("portals", "portal_check_radius", 14);
 
-        getServerConfig().registerOption("sounds", "scary_sound_decrease_factor", 10, "How much sanity you lose if you hear something strange");
+        getServerConfig().registerOption("sounds", "scary_sound_decrease_factor", 50);
 
-        getServerConfig().registerOption("weather", "rain_decrease_factor", 1, "How much sanity you lose when raining");
-        getServerConfig().registerOption("weather", "rain_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("weather", "rain_decrease_factor", 1);
+        getServerConfig().registerOption("weather", "rain_check_ticks", 1200);
 
-        getServerConfig().registerOption("weather", "thunder_decrease_factor", 2, "How much sanity you lose when thundering");
+        getServerConfig().registerOption("weather", "thunder_decrease_factor", 2);
 
-        getServerConfig().registerOption("dimensions", "nether_decrease_factor", 1, "How much sanity you lose on the nether");
-        getServerConfig().registerOption("dimensions", "nether_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("dimensions", "nether_decrease_factor", 2);
+        getServerConfig().registerOption("dimensions", "nether_check_ticks", 1200);
 
-        getServerConfig().registerOption("dimensions", "end_decrease_factor", 2, "How much sanity you lose on the end");
-        getServerConfig().registerOption("dimensions", "end_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("dimensions", "end_decrease_factor", 4);
+        getServerConfig().registerOption("dimensions", "end_check_ticks", 1200);
 
-        getServerConfig().registerOption("damage", "damage_decrease_factor", 2, "How much sanity you lose per damage");
+        getServerConfig().registerOption("damage", "damage_decrease_factor", 10);
 
-        getServerConfig().registerOption("killing", "kill_animal_decrease_factor", 4, "How much sanity you lose by killing animals");
-        getServerConfig().registerOption("killing", "kill_villager_decrease_factor", 10, "How much sanity you lose by killing villagers");
-        getServerConfig().registerOption("killing", "kill_player_decrease_factor", 10, "How much sanity you lose by killing players");
-        getServerConfig().registerOption("killing", "kill_cute_decrease_factor", 6, "How much sanity you lose by killing cute creatures");
+        getServerConfig().registerOption("killing", "kill_animal_decrease_factor", 20);
+        getServerConfig().registerOption("killing", "kill_villager_decrease_factor", 50);
+        getServerConfig().registerOption("killing", "kill_player_decrease_factor", 50);
+        getServerConfig().registerOption("killing", "kill_cute_decrease_factor", 35);
 
-        getServerConfig().registerOption("alone", "alone_decrease_factor", 2, "How much sanity you lose being alone");
-        getServerConfig().registerOption("alone", "alone_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
-        getServerConfig().registerOption("alone", "alone_check_radius", 24, "Radius in which the players and villagers are detected");
+        getServerConfig().registerOption("alone", "alone_decrease_factor", 4);
+        getServerConfig().registerOption("alone", "alone_check_ticks", 1200);
+        getServerConfig().registerOption("alone", "alone_check_radius", 24);
 
-        getServerConfig().registerOption("underground", "underground_decrease_factor", 2, "How much sanity you lose underground");
-        getServerConfig().registerOption("underground", "underground_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("underground", "underground_decrease_factor", 2);
+        getServerConfig().registerOption("underground", "underground_check_ticks", 1200);
 
-        getServerConfig().registerOption("hunger_satiety", "satiety_increase_factor", 2, "How much sanity you gain with satiety");
-        getServerConfig().registerOption("hunger_satiety", "satiety_check_ticks", 1200, "Every this amount of ticks the sanity gain is applied");
-        getServerConfig().registerOption("hunger_satietyy", "satiety_threshold", 0.50f, "Satiety threshold");
+        getServerConfig().registerOption("hunger_satiety", "satiety_increase_factor", 4);
+        getServerConfig().registerOption("hunger_satiety", "satiety_check_ticks", 1200);
+        getServerConfig().registerOption("hunger_satiety", "satiety_threshold", 0.50f);
+        getServerConfig().registerOption("hunger_satiety", "eating_special_factor", 2);
 
-        getServerConfig().registerOption("sleeping", "sleep_increase_factor", 20, "How much sanity you gain by sleeping");
+        getServerConfig().registerOption("sleeping", "sleep_increase_factor", 500);
 
-        getServerConfig().registerOption("sleeping", "sleep_deprived_decrease_factor", 6, "How much sanity you lose by not sleeping");
-        getServerConfig().registerOption("sleeping", "sleep_deprived_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("sleeping", "sleep_deprived_decrease_factor", 6);
+        getServerConfig().registerOption("sleeping", "sleep_deprived_check_ticks", 1200);
 
-        getServerConfig().registerOption("bosses", "near_boss_decrease_factor", 3, "How much sanity you lose nearby a boss");
-        getServerConfig().registerOption("bosses", "near_boss_check_ticks", 200, "Every this amount of ticks the sanity reduction is applied");
-        getServerConfig().registerOption("bosses", "near_boss_check_radius", 64, "Radius in which the bosses are detected");
+        getServerConfig().registerOption("bosses", "near_boss_decrease_factor", 10);
+        getServerConfig().registerOption("bosses", "near_boss_check_ticks", 200);
+        getServerConfig().registerOption("bosses", "near_boss_check_radius", 64);
 
-        getServerConfig().registerOption("pet", "near_pet_increase_factor", 2, "How much sanity you gain nearby a pet");
-        getServerConfig().registerOption("pet", "near_pet_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
-        getServerConfig().registerOption("pet", "near_pet_check_radius", 24, "Radius in which the pets are detected");
+        getServerConfig().registerOption("pet", "near_pet_increase_factor", 2);
+        getServerConfig().registerOption("pet", "near_pet_check_ticks", 1200);
+        getServerConfig().registerOption("pet", "near_pet_check_radius", 24);
 
-        getServerConfig().registerOption("farming", "fishing_increase_factor", 2, "How much sanity you gain by fishing");
-        getServerConfig().registerOption("farming", "planting_increase_factor", 1, "How much sanity you gain by plating");
+        getServerConfig().registerOption("farming", "fishing_increase_factor", 2);
+        getServerConfig().registerOption("farming", "planting_increase_factor", 1);
+        getServerConfig().registerOption("farming", "animal_feed_increase_factor", 1);
 
-        getServerConfig().registerOption("music", "music_increase_factor", 1, "How much sanity you gain by listing music disc");
-        getServerConfig().registerOption("music", "music_check_ticks", 600, "Every this amount of ticks the sanity gain is applied");
-        getServerConfig().registerOption("music", "music_check_radius", 24, "Radius in which the jukeboxes are detected");
+        getServerConfig().registerOption("music", "music_increase_factor", 1);
+        getServerConfig().registerOption("music", "music_check_ticks", 600);
+        getServerConfig().registerOption("music", "music_check_radius", 24);
 
-        getServerConfig().registerOption("advancements", "advancement_increase_factor", 6, "How much sanity you gain by getting an advancement");
+        getServerConfig().registerOption("advancements", "advancement_increase_factor", 6);
 
-        getServerConfig().registerOption("temperature", "temperature_decrease_factor", 1, "How much sanity you lose with temperature");
-        getServerConfig().registerOption("temperature", "temperature_check_ticks", 1200, "Every this amount of ticks the sanity reduction is applied");
+        getServerConfig().registerOption("temperature", "temperature_decrease_factor", 1);
+        getServerConfig().registerOption("temperature", "temperature_check_ticks", 1200);
 
-        getServerConfig().registerOption("ocean", "ocean_decrease_factor", 1, "How much sanity you lose on the ocean");
-        getServerConfig().registerOption("ocean", "ocean_check_ticks", 80, "Every this amount of ticks the sanity reduction is applied");
-        getServerConfig().registerOption("ocean", "ocean_submerged_mult", 3, "Multiplication applied if completely submerged");
+        getServerConfig().registerOption("ocean", "ocean_decrease_factor", 1);
+        getServerConfig().registerOption("ocean", "ocean_check_ticks", 100);
+        getServerConfig().registerOption("ocean", "ocean_submerged_mult", 3);
 
-        getServerConfig().registerOption("loot", "new_loot_factor", 1, "How much sanity you lose/gain when you find new loot");
+        getServerConfig().registerOption("loot", "new_loot_factor", 2);
+        getServerConfig().registerOption("loot", "new_experience_level_increase_factor", 2);
+
+        getServerConfig().registerOption("movement", "reduced_movement_decrease_factor", 1);
+        getServerConfig().registerOption("movement", "reduced_movement_decrease_ticks", 40);
+        getServerConfig().registerOption("movement", "teleported_decrease_factor", 6);
     }
 
     public int getMaxSanity() {
@@ -385,5 +400,33 @@ public class VersatileSanityConfig extends ModConfig {
 
     public int getNewLootFactor() {
         return getServerConfig().get("new_loot_factor", Integer.class);
+    }
+
+    public int getNewExperienceLevelIncreaseFactor() {
+        return getServerConfig().get("new_experience_level_increase_factor", Integer.class);
+    }
+
+    public int getReducedMovementDecreaseFactor() {
+        return getServerConfig().get("reduced_movement_decrease_factor", Integer.class);
+    }
+
+    public int getReducedMovementTicks() {
+        return getServerConfig().get("reduced_movement_decrease_ticks", Integer.class);
+    }
+
+    public int getEatingSpecialFactor() {
+        return getServerConfig().get("eating_special_factor", Integer.class);
+    }
+
+    public int getTeleportedDecreaseFactor() {
+        return getServerConfig().get("teleported_decrease_factor", Integer.class);
+    }
+
+    public int getVillagerTradeIncreaseFactor() {
+        return getServerConfig().get("villager_trade_increase_factor", Integer.class);
+    }
+
+    public int getAnimalFeedIncreaseFactor() {
+        return getServerConfig().get("animal_feed_increase_factor", Integer.class);
     }
 }

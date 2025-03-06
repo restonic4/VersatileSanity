@@ -15,8 +15,10 @@ import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import com.restonic4.versatilesanity.modules.SleepHandler;
 import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
+import com.restonic4.versatilesanity.registry.commands.SanityCommand;
 import com.restonic4.versatilesanity.util.LootQualityChecker;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -96,20 +98,24 @@ public class VersatileSanity implements ModInitializer {
         if (isModLoaded(CompatibleMods.TOUGH_AS_NAILS)) {
             ToughAsNailsCompatibility.onInitialize();
         }
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, commandSelection) -> {
+            SanityCommand.register(dispatcher);
+        });
+
     }
 
     private boolean onPlayerAttackEntity(LivingEntity livingEntity, DamageSource damageSource, float amount) {
         if (damageSource.getEntity() instanceof Player player) {
             if (!livingEntity.isAlive()) {
-                int randomChance = RandomHelper.randomBetween(0, 100);
 
                 if (livingEntity instanceof Villager || livingEntity instanceof WanderingTrader) {
                     SanityEventHandler.onVillagerKilled(player);
                 } else if (livingEntity instanceof Player) {
                     SanityEventHandler.onPlayerKilled(player);
-                } else if (isCute(livingEntity) && randomChance <= 60) {
+                } else if (isCute(livingEntity)) {
                     SanityEventHandler.onCuteCreatureKilled(player);
-                } else if (livingEntity instanceof Animal && randomChance <= 40) {
+                } else if (livingEntity instanceof Animal) {
                     SanityEventHandler.onAnimalKilled(player);
                 }
             }

@@ -1,0 +1,14 @@
+{
+  "targets": [
+    "minecraft:main"
+  ],
+  "passes": [
+    {
+      "name": "greyscale",
+      "intarget": "minecraft:main",
+      "outtarget": "minecraft:main",
+      "auxtargets": {},
+      "fragment": "versatilesanity:post/greyscale.frag"
+    }
+  ]
+}
