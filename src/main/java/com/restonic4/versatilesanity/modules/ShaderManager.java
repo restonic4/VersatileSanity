@@ -47,8 +47,8 @@ public class ShaderManager {
             updateGrayscale(intensity);
             updateVignette(tickDelta, level, intensityRemapped);
 
-            //BAD_VISION_SHADER.render(tickDelta);
-            //GREYSCALE_SHADER.render(tickDelta);
+            BAD_VISION_SHADER.render(tickDelta);
+            GREYSCALE_SHADER.render(tickDelta);
             VIGNETTE_SHADER.render(tickDelta);
         });
     }

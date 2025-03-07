@@ -13,7 +13,8 @@
     "ServerPlayerMixin"
   ],
   "client": [
-    "GuiMixin"
+    "GuiMixin",
+    "LightTextureMixin"
   ],
   "injectors": {
     "defaultRequire": 1
