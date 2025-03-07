@@ -1,14 +1,15 @@
 {
-  "targets": [
-    "minecraft:main"
-  ],
+  "targets": [ "swap" ],
   "passes": [
     {
-      "name": "greyscale",
+      "name": "versatilesanity:greyscale",
       "intarget": "minecraft:main",
-      "outtarget": "minecraft:main",
-      "auxtargets": {},
-      "fragment": "versatilesanity:post/greyscale.frag"
+      "outtarget": "swap"
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
     }
   ]
 }

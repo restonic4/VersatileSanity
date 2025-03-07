@@ -10,8 +10,12 @@ import com.chaotic_loom.under_control.util.MathHelper;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.CaveSoundHandler;
+import com.restonic4.versatilesanity.modules.ShaderManager;
 import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
+import ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import ladysnake.satin.api.managed.ManagedShaderEffect;
+import ladysnake.satin.api.managed.ShaderEffectManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
@@ -24,8 +28,6 @@ import java.util.List;
 
 public class VersatileSanityClient implements ClientModInitializer {
     private VersatileSanityConfig config = VersatileSanity.getConfig();
-
-    private static PostChain greyscaleChain;
 
     @Override
     public void onInitializeClient() {
@@ -53,10 +55,6 @@ public class VersatileSanityClient implements ClientModInitializer {
             }
         });
 
-        Minecraft mc = Minecraft.getInstance();
-        mc.execute(() -> {
-            mc.gameRenderer.loadEffect(new ResourceLocation(VersatileSanity.MOD_ID, "shaders/post/greyscale.json"));
-        });
-
+        ShaderManager.register();
     }
 }
