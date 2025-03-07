@@ -8,6 +8,7 @@ import com.chaotic_loom.under_control.events.types.ServerPlayerExtraEvents;
 import com.chaotic_loom.under_control.util.FabricHelper;
 import com.chaotic_loom.under_control.util.MinecraftHelper;
 import com.chaotic_loom.under_control.util.RandomHelper;
+import com.chaotic_loom.under_control.util.WeightedRandomPicker;
 import com.restonic4.versatilesanity.compatibility.CompatibleMods;
 import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
@@ -102,7 +103,6 @@ public class VersatileSanity implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, commandSelection) -> {
             SanityCommand.register(dispatcher);
         });
-
     }
 
     private boolean onPlayerAttackEntity(LivingEntity livingEntity, DamageSource damageSource, float amount) {

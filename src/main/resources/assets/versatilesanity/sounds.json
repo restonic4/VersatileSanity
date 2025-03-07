@@ -1,0 +1,42 @@
+{
+  "creaking": {
+    "sounds": [
+      {
+        "name": "versatilesanity:creaking1",
+        "stream": false
+      },
+      {
+        "name": "versatilesanity:creaking2",
+        "stream": false
+      },
+      {
+        "name": "versatilesanity:creaking3",
+        "stream": false
+      }
+    ]
+  },
+  "whisper_long": {
+    "sounds": [
+      {
+        "name": "versatilesanity:whisper1",
+        "stream": false
+      },
+      {
+        "name": "versatilesanity:whisper2",
+        "stream": false
+      },
+      {
+        "name": "versatilesanity:whisper3",
+        "stream": false
+      },
+      {
+        "name": "versatilesanity:whisper4",
+        "stream": false
+      },
+      {
+        "name": "versatilesanity:whisper5",
+        "stream": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "minecraft:recipes/transportation/mangrove_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2025-03-07 16:28:47 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/acacia_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/cherry_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:adventure/root": {
+    "criteria": {
+      "killed_something": "2025-03-07 16:31:47 +0100"
+    },
+    "done": true
+  },
+  "minecraft:adventure/kill_all_mobs": {
+    "criteria": {
+      "minecraft:spider": "2025-03-07 16:40:14 +0100",
+      "minecraft:zombie": "2025-03-07 16:48:15 +0100"
+    },
+    "done": false
+  },
+  "minecraft:adventure/kill_a_mob": {
+    "criteria": {
+      "minecraft:spider": "2025-03-07 16:40:14 +0100"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:birch_forest": "2025-03-07 16:50:03 +0100",
+      "minecraft:beach": "2025-03-07 16:28:48 +0100",
+      "minecraft:sparse_jungle": "2025-03-07 16:29:07 +0100",
+      "minecraft:lukewarm_ocean": "2025-03-07 16:40:56 +0100",
+      "minecraft:river": "2025-03-07 16:39:54 +0100",
+      "minecraft:jungle": "2025-03-07 16:40:02 +0100",
+      "minecraft:ocean": "2025-03-07 16:41:21 +0100",
+      "minecraft:savanna": "2025-03-07 16:35:34 +0100",
+      "minecraft:plains": "2025-03-07 16:34:46 +0100"
+    },
+    "done": false
+  },
+  "minecraft:recipes/transportation/bamboo_raft": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/spruce_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/birch_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/oak_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/jungle_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/dark_oak_boat": {
+    "criteria": {
+      "in_water": "2025-03-07 16:30:33 +0100"
+    },
+    "done": true
+  },
+  "DataVersion": 3465
+}

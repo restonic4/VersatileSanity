@@ -7,6 +7,7 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "minecraft:beach": "2025-03-07 20:58:52 +0100",
       "minecraft:sparse_jungle": "2025-03-07 11:44:07 +0100"
     },
     "done": false

@@ -6,8 +6,7 @@ import com.restonic4.versatilesanity.compatibility.CompatibleMods;
 import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
-import com.restonic4.versatilesanity.modules.SanityEventHandler;
-import com.restonic4.versatilesanity.modules.SleepHandler;
+import com.restonic4.versatilesanity.modules.*;
 import com.restonic4.versatilesanity.util.UndergroundDetector;
 import com.restonic4.versatilesanity.util.Utils;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
@@ -116,6 +115,10 @@ public class PlayerMixin {
             if (shouldTick(player, config.getReducedMovementTicks()) && Utils.isPlayerMoving(player) && Utils.isInCobweb(player)) {
                 SanityEventHandler.onCobWebTick(player);
             }
+
+            CreepySoundManager.tick();
+            ScreenShaker.tick();
+            WhispersManager.tick();
         }
     }
 

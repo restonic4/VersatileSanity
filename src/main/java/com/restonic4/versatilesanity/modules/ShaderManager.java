@@ -21,6 +21,9 @@ public class ShaderManager {
     private static final ManagedShaderEffect BAD_VISION_SHADER = ShaderEffectManager.getInstance()
             .manage(new ResourceLocation(VersatileSanity.MOD_ID, "shaders/post/bad_vision.json"));
 
+    private static final ManagedShaderEffect NOISE_SHADER = ShaderEffectManager.getInstance()
+            .manage(new ResourceLocation(VersatileSanity.MOD_ID, "shaders/post/noise.json"));
+
 
     private static int ticks = 0;
 
@@ -39,18 +42,23 @@ public class ShaderManager {
 
             float intensityBase = (float) MathHelper.normalize(sanity, 0, maxSanity);
             float intensity = 1 - Math.max(0, Math.min(1, intensityBase));
-            float intensityRemapped = 1 - Math.max(0, Math.min(1, (float) MathHelper.normalize(intensityBase, 0, 0.65f)));
+            float intensityRemappedForVignette = 1 - Math.max(0, Math.min(1, (float) MathHelper.normalize(intensityBase, 0, 0.65f)));
+            float intensityRemappedForNoise = 1 - Math.max(0, Math.min(1, (float) MathHelper.normalize(intensityBase, 0, 0.75f)));
 
-            System.out.println(intensityRemapped);
-
+            updateNoise(intensityRemappedForNoise);
             updateBadVision(intensity);
             updateGrayscale(intensity);
-            updateVignette(tickDelta, level, intensityRemapped);
+            updateVignette(tickDelta, level, intensityRemappedForVignette);
 
+            NOISE_SHADER.render(tickDelta);
             BAD_VISION_SHADER.render(tickDelta);
             GREYSCALE_SHADER.render(tickDelta);
             VIGNETTE_SHADER.render(tickDelta);
         });
+    }
+
+    private static void updateNoise(float intensity) {
+        NOISE_SHADER.setUniformValue("uIntensity", intensity);
     }
 
     private static void updateBadVision(float intensity) {
