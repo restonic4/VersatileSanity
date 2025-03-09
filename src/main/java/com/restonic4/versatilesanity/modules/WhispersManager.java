@@ -20,6 +20,8 @@ public class WhispersManager {
     private static int currentTick = 0;
     private static int nextWhisperTick = 0;
 
+    private static float channelVolume;
+
     public static void tick() {
         if (minecraft.level == null || minecraft.player == null) {
             return;
@@ -34,25 +36,30 @@ public class WhispersManager {
         if (intensity <= 0.7f) {
             currentTick = 0;
             nextWhisperTick = 0;
+            channelVolume = 0;
             return;
         }
 
         float progress = normalize(intensity, 0.7f);
         progress = Math.min(Math.max(progress, 0f), 1f);
 
+        channelVolume = 0.3f * progress;
+
         currentTick ++;
 
         if (currentTick >= nextWhisperTick) {
             nextWhisperTick = (int) (currentTick + RandomHelper.randomBetween(12 * 20, 16 * 20));
 
-            System.out.println(progress);
-
-            SimpleSoundInstance instance = new SimpleSoundInstance(CustomSounds.WHISPER_LONG, SoundSource.PLAYERS, 0.3f * progress, 1, RandomSource.create(), minecraft.player.blockPosition());
-            minecraft.getSoundManager().play(instance);
+            SimpleSoundInstance instance = new SimpleSoundInstance(CustomSounds.WHISPER_LONG, SoundSource.valueOf("WHISPERS"), 1, 1, RandomSource.create(), minecraft.player.blockPosition());
+            minecraft.execute(() -> minecraft.getSoundManager().play(instance));
         }
     }
 
     public static float normalize(float x, float min) {
         return (x - min) / (1.0f - min);
+    }
+
+    public static float getChannelVolume() {
+        return channelVolume;
     }
 }

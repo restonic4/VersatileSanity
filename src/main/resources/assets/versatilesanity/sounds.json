@@ -38,5 +38,21 @@
         "stream": false
       }
     ]
+  },
+  "sanity_ambient_loop": {
+    "sounds": [
+      {
+        "name": "versatilesanity:sanity_ambient_loop",
+        "stream": false
+      }
+    ]
+  },
+  "geo": {
+    "sounds": [
+      {
+        "name": "versatilesanity:geo",
+        "stream": false
+      }
+    ]
   }
 }

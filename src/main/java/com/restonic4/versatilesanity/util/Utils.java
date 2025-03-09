@@ -4,9 +4,12 @@ import com.restonic4.versatilesanity.VersatileSanity;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.Structures;
+
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -23,17 +26,20 @@ import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -50,18 +56,12 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -391,5 +391,119 @@ public class Utils {
     // Entity.deltaMovement sucks so bad, it's so broken, it does not update in weird case escenarios.
     public static boolean isPlayerMoving(Player player) {
         return ((MovingTracker) player).versatileSanity$isMoving();
+    }
+
+    public static void shuffleInventory(Player player, int slotsToShuffle) {
+        Inventory inventory = player.getInventory();
+
+        // Generar lista de slots disponibles (9-35)
+        List<Integer> availableSlots = new ArrayList<>();
+        for (int i = 9; i < 36; i++) {
+            availableSlots.add(i);
+        }
+
+        // Mezclar y seleccionar slots aleatorios únicos
+        Collections.shuffle(availableSlots);
+        int targetSlots = org.joml.Math.clamp(slotsToShuffle, 1, 27);
+        List<Integer> selectedSlots = availableSlots.subList(0, targetSlots);
+
+        // Obtener items de los slots seleccionados
+        List<ItemStack> selectedItems = new ArrayList<>();
+        for (int slot : selectedSlots) {
+            selectedItems.add(inventory.getItem(slot));
+        }
+
+        // Mezclar los items entre sí
+        Collections.shuffle(selectedItems);
+
+        // Reasignar los items a los mismos slots (en nuevo orden)
+        for (int i = 0; i < selectedSlots.size(); i++) {
+            inventory.setItem(selectedSlots.get(i), selectedItems.get(i));
+        }
+
+        inventory.setChanged();
+    }
+
+    public static ItemStack createSignedBook(String title, String author, String content) {
+        // Crear un nuevo libro
+        ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
+        CompoundTag nbt = new CompoundTag();
+
+        // Establecer el autor y título
+        nbt.putString("author", author);
+        nbt.putString("title", title);
+
+        // Dividir el contenido en páginas
+        ListTag pages = new ListTag();
+        String[] words = content.split(" ");
+        StringBuilder currentPage = new StringBuilder();
+        int charsInPage = 0;
+
+        // Minecraft tiene un límite aproximado de 256 caracteres por página
+        // (aunque también depende de la anchura de los caracteres)
+        final int MAX_CHARS_PER_PAGE = 240;
+
+        for (String word : words) {
+            // Verificar si añadir la palabra excedería el límite
+            if (charsInPage + word.length() + 1 > MAX_CHARS_PER_PAGE) {
+                // Añadir la página actual y empezar una nueva
+                pages.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal(currentPage.toString()))));
+                currentPage = new StringBuilder();
+                charsInPage = 0;
+            }
+
+            // Añadir la palabra a la página actual
+            if (charsInPage > 0) {
+                currentPage.append(" ");
+                charsInPage++;
+            }
+            currentPage.append(word);
+            charsInPage += word.length();
+        }
+
+        // Añadir la última página si tiene contenido
+        if (!currentPage.isEmpty()) {
+            pages.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal(currentPage.toString()))));
+        }
+
+        // Añadir las páginas al libro
+        nbt.put("pages", pages);
+
+        // Marcar el libro como resuelto (necesario para libros firmados)
+        nbt.putBoolean("resolved", true);
+
+        // Establecer el NBT al libro
+        bookStack.setTag(nbt);
+
+        return bookStack;
+    }
+
+    public static ItemEntity spawnSignedBookAt(ServerLevel level, BlockPos pos, String title, String author, String content) {
+        // Crear el libro usando la función anterior
+        ItemStack bookStack = createSignedBook(title, author, content);
+
+        // Convertir BlockPos a coordenadas Vec3d (añadiendo 0.5 para centrar en el bloque)
+        Vec3 position = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+
+        // Crear una entidad de item con el libro
+        ItemEntity itemEntity = new ItemEntity(
+                level,
+                position.x(),
+                position.y(),
+                position.z(),
+                bookStack,
+                0.0, // velocidad en X
+                0.1, // velocidad en Y (un pequeño rebote)
+                0.0  // velocidad en Z
+        );
+
+        // Establecer un tiempo de despawn normal (6000 ticks = 5 minutos)
+        itemEntity.setPickUpDelay(10); // pequeño retraso para recogerlo (10 ticks = 0.5 segundos)
+        itemEntity.setUnlimitedLifetime();
+
+        // Spawnear la entidad en el mundo
+        level.addFreshEntity(itemEntity);
+
+        return itemEntity;
     }
 }

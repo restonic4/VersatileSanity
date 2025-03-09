@@ -10,11 +10,16 @@
     "ParrotMixin",
     "PlayerMixin",
     "ServerPlayerGameModeMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "VillagerHostilesSensorMixin",
+    "VillagerMixin"
   ],
   "client": [
     "GuiMixin",
-    "LightTextureMixin"
+    "LevelRendererMixin",
+    "LightTextureMixin",
+    "OptionsMixin",
+    "SoundEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

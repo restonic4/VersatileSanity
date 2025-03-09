@@ -76,6 +76,7 @@ public class VersatileSanityConfig extends ModConfig {
     Incremento al obtener 1 nivel de experiencia: 1
     Incremento al tradear con aldeanos
     Incremento al alimentar animales
+    Incremento al estar en casa
 
     Incremento o Reduction al encontrar loot en cofres: Terrible: -2, Malo: -1, Normal: 1, Bueno: 2, Increible: 3 (Calidad del loot)
     Incremento o reduction al comer items especiales, rotten flesh, golden apple...
@@ -428,5 +429,9 @@ public class VersatileSanityConfig extends ModConfig {
 
     public int getAnimalFeedIncreaseFactor() {
         return getServerConfig().get("animal_feed_increase_factor", Integer.class);
+    }
+
+    public int getInventoryShuffleTicks() {
+        return 400;
     }
 }

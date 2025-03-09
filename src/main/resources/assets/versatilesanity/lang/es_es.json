@@ -152,5 +152,7 @@
   "gui.versatilesanity.config.option.teleported_decrease_factor": "Factor de teletransporte.",
   "gui.versatilesanity.config.option.reduced_movement_decrease_factor.tooltip": "Se aplica al tener movimiento limitado, como estar en una tela de araña.",
   "gui.versatilesanity.config.option.reduced_movement_decrease_ticks.tooltip": "Cada esta cantidad de ticks la reducción de cordura es aplicada.",
-  "gui.versatilesanity.config.option.teleported_decrease_factor.tooltip": "Se aplica al ser teletransportado."
+  "gui.versatilesanity.config.option.teleported_decrease_factor.tooltip": "Se aplica al ser teletransportado.",
+  "effect.versatilesanity.mind_restoration": "Restauración mental",
+  "fate.versatilesanity.death": "Tus sombras han traicionado el eco de tu alma, y los demonios internos han quebrado tu resistencia. Ha llegado tu hora; la oscuridad reclama lo que es suyo."
 }

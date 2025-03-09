@@ -18,11 +18,15 @@
     "main": [
       "com.restonic4.versatilesanity.VersatileSanity"
     ],
-    "cardinal-components": ["com.restonic4.versatilesanity.components.SanityStatusComponents"]
+    "cardinal-components": [
+      "com.restonic4.versatilesanity.components.SanityStatusComponents",
+      "com.restonic4.versatilesanity.components.HomeDetectionComponents"
+    ]
   },
   "custom": {
     "cardinal-components": [
-      "versatilesanity:sanity"
+      "versatilesanity:sanity",
+      "versatilesanity:home_detection"
     ],
     "modmenu": {
       "links": {
@@ -30,6 +34,12 @@
       },
       "badges": [
         "chaotic_loom"
+      ]
+    },
+    "under_control": {
+      "hidden_sound_sources": [
+        "sanity_ambient",
+        "whispers"
       ]
     }
   },

@@ -179,5 +179,8 @@
   "gui.versatilesanity.config.option.teleported_decrease_factor": "Teleportation decrease factor.",
   "gui.versatilesanity.config.option.reduced_movement_decrease_factor.tooltip": "Applied when movement is limited, such as walking on cobweb.",
   "gui.versatilesanity.config.option.reduced_movement_decrease_ticks.tooltip": "Every this amount of ticks the sanity reduction is applied.",
-  "gui.versatilesanity.config.option.teleported_decrease_factor.tooltip": "Applied on every teleportation."
+  "gui.versatilesanity.config.option.teleported_decrease_factor.tooltip": "Applied on every teleportation.",
+
+  "effect.versatilesanity.mind_restoration": "Mind restoration",
+  "fate.versatilesanity.death": "Your shadows have betrayed the echo of your soul, and your inner demons have shattered your resolve. Your hour has come; darkness claims what is rightfully its own."
 }

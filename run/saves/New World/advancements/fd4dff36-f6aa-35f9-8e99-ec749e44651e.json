@@ -17,12 +17,6 @@
     },
     "done": true
   },
-  "minecraft:adventure/adventuring_time": {
-    "criteria": {
-      "minecraft:beach": "2025-03-04 19:16:11 +0100"
-    },
-    "done": false
-  },
   "minecraft:recipes/transportation/activator_rail": {
     "criteria": {
       "has_rail": "2025-03-04 19:16:10 +0100"
@@ -34,6 +28,13 @@
       "has_rail": "2025-03-04 19:16:10 +0100"
     },
     "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:beach": "2025-03-04 19:16:11 +0100",
+      "minecraft:forest": "2025-03-08 21:16:55 +0100"
+    },
+    "done": false
   },
   "DataVersion": 3465
 }

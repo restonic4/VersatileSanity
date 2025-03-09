@@ -1,13 +1,22 @@
 {
-  "minecraft:recipes/transportation/mangrove_boat": {
-    "criteria": {
-      "in_water": "2025-03-03 11:50:40 +0100"
-    },
-    "done": true
-  },
   "minecraft:recipes/decorations/crafting_table": {
     "criteria": {
       "unlock_right_away": "2025-03-03 11:50:22 +0100"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:birch_forest": "2025-03-03 11:50:24 +0100",
+      "minecraft:beach": "2025-03-03 11:50:34 +0100",
+      "minecraft:ocean": "2025-03-03 11:51:23 +0100",
+      "minecraft:savanna": "2025-03-08 10:17:09 +0100"
+    },
+    "done": false
+  },
+  "minecraft:recipes/transportation/mangrove_boat": {
+    "criteria": {
+      "in_water": "2025-03-03 11:50:40 +0100"
     },
     "done": true
   },
@@ -22,14 +31,6 @@
       "in_water": "2025-03-03 11:50:40 +0100"
     },
     "done": true
-  },
-  "minecraft:adventure/adventuring_time": {
-    "criteria": {
-      "minecraft:birch_forest": "2025-03-03 11:50:24 +0100",
-      "minecraft:beach": "2025-03-03 11:50:34 +0100",
-      "minecraft:ocean": "2025-03-03 11:51:23 +0100"
-    },
-    "done": false
   },
   "minecraft:recipes/transportation/bamboo_raft": {
     "criteria": {

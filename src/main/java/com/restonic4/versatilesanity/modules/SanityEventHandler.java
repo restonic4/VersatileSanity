@@ -2,16 +2,22 @@ package com.restonic4.versatilesanity.modules;
 
 import com.chaotic_loom.under_control.util.RandomHelper;
 import com.restonic4.versatilesanity.VersatileSanity;
+import com.restonic4.versatilesanity.components.HomeDetectionComponent;
+import com.restonic4.versatilesanity.components.HomeDetectionComponents;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.util.LootQualityChecker;
 import com.restonic4.versatilesanity.util.Utils;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -268,5 +274,40 @@ public class SanityEventHandler {
     public static void onParrotPoisoned(Player player) {
         System.out.println("[-] Parrot poisoned");
         SanityStatusComponents.SANITY_STATUS.get(player).decrementSanityStatus(config.getAnimalFeedIncreaseFactor());
+    }
+
+    public static void onHomeTick(Player player) {
+        System.out.println("[+] At home ( Score: " + HomeDetectionComponents.HOME_DETECTION.get(player).getScoreAtCurrentPosition(player.blockPosition(), HomeDetectionComponent.DETECTION_RANGE) + " )");
+        SanityStatusComponents.SANITY_STATUS.get(player).incrementSanityStatus(config.getVillageGainFactor());
+    }
+
+    public static void geoKill(Player player) {
+        if (player == null) return;
+
+        Inventory inventory = player.getInventory();
+
+        int removedItemCount = 0;
+
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            if (isSlotProtected(player, i)) continue;
+
+            ItemStack stack = inventory.getItem(i);
+            if (!stack.isEmpty()) {
+                removedItemCount += stack.getCount();
+                inventory.setItem(i, ItemStack.EMPTY);
+            }
+        }
+
+        if (removedItemCount > 0) {
+            ItemStack rottenFleshStack = new ItemStack(Items.ROTTEN_FLESH, removedItemCount);
+            inventory.add(rottenFleshStack);
+        }
+
+        player.containerMenu.broadcastChanges();
+        player.kill();
+    }
+
+    private static boolean isSlotProtected(Player player, int slot) {
+        return slot >= 36 || slot == player.getInventory().selected;
     }
 }

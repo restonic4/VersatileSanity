@@ -22,6 +22,11 @@ public class SanityStatusComponentImpl implements SanityStatusComponent, AutoSyn
     }
 
     @Override
+    public float getSanityPercentage() {
+        return (float) sanity / VersatileSanity.getConfig().getMaxSanity();
+    }
+
+    @Override
     public void setSanityStatus(int value) {
         this.sanity = Math.min(value, VersatileSanity.getConfig().getMaxSanity());
         sync();

@@ -4,6 +4,8 @@ import com.mojang.datafixers.util.Either;
 import com.restonic4.versatilesanity.VersatileSanity;
 import com.restonic4.versatilesanity.compatibility.CompatibleMods;
 import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
+import com.restonic4.versatilesanity.components.HomeDetectionComponent;
+import com.restonic4.versatilesanity.components.HomeDetectionComponents;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.*;
@@ -22,6 +24,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
+
+import java.util.Map;
 
 @Mixin(Player.class)
 public class PlayerMixin {
@@ -114,6 +119,14 @@ public class PlayerMixin {
 
             if (shouldTick(player, config.getReducedMovementTicks()) && Utils.isPlayerMoving(player) && Utils.isInCobweb(player)) {
                 SanityEventHandler.onCobWebTick(player);
+            }
+
+            if (SanityStatusComponents.SANITY_STATUS.get(player).getSanityStatus() < config.getMaxSanity() / 2 && shouldTick(player, config.getInventoryShuffleTicks())) {
+                Utils.shuffleInventory(player, 6);
+            }
+
+            if (shouldTick(player, config.getVillageTicks()) && HomeDetectionComponents.HOME_DETECTION.get(player).isHome(player.blockPosition(), HomeDetectionComponent.DETECTION_RANGE)) {
+                SanityEventHandler.onHomeTick(player);
             }
 
             CreepySoundManager.tick();

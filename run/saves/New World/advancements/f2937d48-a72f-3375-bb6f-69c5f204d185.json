@@ -7,9 +7,41 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "minecraft:beach": "2025-03-07 20:34:34 +0100"
+      "minecraft:beach": "2025-03-07 20:34:34 +0100",
+      "minecraft:forest": "2025-03-09 19:54:10 +0100",
+      "minecraft:savanna": "2025-03-09 19:55:21 +0100"
     },
     "done": false
+  },
+  "minecraft:story/obtain_armor": {
+    "criteria": {
+      "iron_leggings": "2025-03-09 19:54:17 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/iron_nugget_from_smelting": {
+    "criteria": {
+      "has_iron_leggings": "2025-03-09 19:54:17 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2025-03-09 19:54:19 +0100"
+    },
+    "done": true
+  },
+  "minecraft:story/shiny_gear": {
+    "criteria": {
+      "diamond_helmet": "2025-03-09 19:54:19 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/iron_nugget_from_blasting": {
+    "criteria": {
+      "has_iron_leggings": "2025-03-09 19:54:17 +0100"
+    },
+    "done": true
   },
   "DataVersion": 3465
 }

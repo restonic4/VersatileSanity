@@ -10,14 +10,17 @@ import net.minecraft.sounds.SoundEvent;
 
 @Registration(side = ExecutionSide.COMMON)
 public class CustomSounds {
-    public static SoundEvent CREAKING;
-    public static SoundEvent WHISPER_LONG;
+    public static SoundEvent CREAKING = register("creaking");
+    public static SoundEvent WHISPER_LONG = register("whisper_long");
+    public static SoundEvent SANITY_AMBIENT_LOOP = register("sanity_ambient_loop");
+    public static SoundEvent GEO = register("geo");
 
     public static void register() {
-        ResourceLocation creakingLocation = new ResourceLocation(VersatileSanity.MOD_ID, "creaking");
-        CREAKING = Registry.register(BuiltInRegistries.SOUND_EVENT, creakingLocation, SoundEvent.createVariableRangeEvent(creakingLocation));
+        System.out.println("Sounds registered!");
+    }
 
-        ResourceLocation whisperLocation = new ResourceLocation(VersatileSanity.MOD_ID, "whisper_long");
-        WHISPER_LONG = Registry.register(BuiltInRegistries.SOUND_EVENT, whisperLocation, SoundEvent.createVariableRangeEvent(whisperLocation));
+    public static SoundEvent register(String id) {
+        ResourceLocation location = new ResourceLocation(VersatileSanity.MOD_ID, id);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, location, SoundEvent.createVariableRangeEvent(location));
     }
 }

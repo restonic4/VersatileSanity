@@ -33,7 +33,7 @@ public class CreepySoundManager {
     static {
         picker.addItem("cave", 1);
         picker.addItem("creeper", 2);
-        picker.addItem("footsteps", 2);
+        picker.addItem("footsteps", 3);
     }
 
     public static void tick() {

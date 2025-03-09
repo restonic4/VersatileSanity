@@ -2,32 +2,24 @@ package com.restonic4.versatilesanity;
 
 import com.chaotic_loom.under_control.api.config.ConfigAPI;
 import com.chaotic_loom.under_control.client.gui.ConfigSelectorScreen;
-import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
-import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
 import com.chaotic_loom.under_control.events.EventResult;
 import com.chaotic_loom.under_control.events.types.ClientEvents;
-import com.chaotic_loom.under_control.util.MathHelper;
-import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.chaotic_loom.under_control.events.types.RegistrationEvents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
-import com.restonic4.versatilesanity.modules.CaveSoundHandler;
-import com.restonic4.versatilesanity.modules.ShaderManager;
+import com.restonic4.versatilesanity.modules.*;
 import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
-import com.restonic4.versatilesanity.util.WaterMassDetector;
-import ladysnake.satin.api.event.ShaderEffectRenderCallback;
-import ladysnake.satin.api.managed.ManagedShaderEffect;
-import ladysnake.satin.api.managed.ShaderEffectManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.PostChain;
-import net.minecraft.core.BlockPos;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.sounds.SoundSource;
+import org.joml.Vector3f;
 
 public class VersatileSanityClient implements ClientModInitializer {
     private VersatileSanityConfig config = VersatileSanity.getConfig();
+    private static DynamicSoundManager dynamicSoundManager;
+
+    public static GeoRenderer geoRenderer;
 
     @Override
     public void onInitializeClient() {
@@ -41,7 +33,23 @@ public class VersatileSanityClient implements ClientModInitializer {
             return EventResult.SUCCEEDED;
         });
 
+        geoRenderer = new GeoRenderer();
+        WorldRenderEvents.END.register(geoRenderer::renderCubes);
+
+        geoRenderer.addCube(
+                "geo",
+                new Vector3f(0, 100, 0),
+                new Vector3f(10, 10, 10),
+                new GeoRenderer.Rotation(0, 0, 0),
+                new ResourceLocation(VersatileSanity.MOD_ID, "textures/black.png"),
+                1f, 1f, 1f, 1f
+        );
+
         ClientTickEvents.START_CLIENT_TICK.register((minecraft) -> {
+            if (minecraft.player != null && minecraft.player.isCrouching()) {
+                geoRenderer.startKilling();
+            }
+
             if (config.getDebugOcean()) {
                 ClientDebuggers.OCEAN.enable();
             } else {
@@ -55,6 +63,17 @@ public class VersatileSanityClient implements ClientModInitializer {
             }
         });
 
+        RegistrationEvents.SOUND_SOURCE_COMPLETED.register(() -> {
+            SoundSource soundSource = SoundSource.valueOf("SANITY_AMBIENT");
+            System.out.println(soundSource);
+
+            dynamicSoundManager = new DynamicSoundManager();
+        });
+
         ShaderManager.register();
+    }
+
+    public static DynamicSoundManager getDynamicSoundManager() {
+        return dynamicSoundManager;
     }
 }
