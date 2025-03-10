@@ -18,6 +18,7 @@
     "GuiMixin",
     "LightTextureMixin",
     "OptionsMixin",
+    "PlayerRendererMixin",
     "SoundEngineMixin"
   ],
   "injectors": {
