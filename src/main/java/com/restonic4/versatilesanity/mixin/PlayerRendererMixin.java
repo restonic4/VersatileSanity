@@ -17,6 +17,6 @@ public class PlayerRendererMixin {
             cancellable = true
     )
     public void render(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
-        ci.cancel();
+        //ci.cancel();
     }
 }

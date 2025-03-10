@@ -61,7 +61,6 @@ public class VersatileSanity implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        SanityStatusBarNetworking.register();
         config.register();
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {

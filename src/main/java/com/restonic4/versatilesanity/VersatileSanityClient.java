@@ -8,6 +8,7 @@ import com.chaotic_loom.under_control.events.types.RegistrationEvents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.*;
 import com.restonic4.versatilesanity.networking.ClientSanityManager;
+import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -22,6 +23,7 @@ public class VersatileSanityClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        SanityStatusBarNetworking.register();
         ConfigAPI.registerConfigScreen(VersatileSanity.MOD_ID, ConfigSelectorScreen.Builder.class);
 
         ClientEvents.SOUND_PLAY.register((soundInstance) -> {

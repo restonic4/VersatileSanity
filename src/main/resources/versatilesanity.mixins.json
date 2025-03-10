@@ -19,7 +19,9 @@
     "LightTextureMixin",
     "OptionsMixin",
     "PlayerRendererMixin",
-    "SoundEngineMixin"
+    "SoundEngineMixin",
+    "TitleScreenMixin",
+    "WarningLabelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

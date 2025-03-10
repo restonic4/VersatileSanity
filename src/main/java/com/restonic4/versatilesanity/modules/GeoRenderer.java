@@ -6,6 +6,7 @@ import com.chaotic_loom.under_control.client.rendering.render_layers.CubeGeometr
 import com.chaotic_loom.under_control.client.rendering.render_layers.RenderLayerRenderer;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.chaotic_loom.under_control.util.data_holders.ServerInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -16,10 +17,12 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -109,9 +112,10 @@ public class GeoRenderer {
 
             GeoKill.sendToServer();
             ErrorWindow.execute(I18n.get("fate.versatilesanity.death"));
+            FlagHelper.set("geo_death", true);
+            FlagHelper.set("geo_death_world", getCurrentWorldIdentifier());
             Minecraft client = Minecraft.getInstance();
             client.execute(client::stop);
-            //NativeDialog.showConfirmDialog("HAHA", "hello");
         }
 
         float progressX = EasingSystem.getEasedValue(progress, animStartPos.x, cube.getPosition().x, EasingSystem.EasingType.EXPONENTIAL_IN);
@@ -162,5 +166,29 @@ public class GeoRenderer {
                 );
             }
         }
+    }
+
+    public static String getCurrentWorldIdentifier() {
+        Minecraft client = Minecraft.getInstance();
+
+        if (client.level == null) {
+            return "unknown";
+        }
+
+        if (client.hasSingleplayerServer()) {
+            IntegratedServer server = client.getSingleplayerServer();
+            if (server != null) {
+                return server.name();
+            }
+            return "unknown_local";
+        }
+
+        else if (client.getCurrentServer() != null) {
+            ServerData serverInfo = client.getCurrentServer();
+            return serverInfo.ip;
+        }
+
+        // Último recurso: usar un hash del directorio del mundo
+        return "world_" + client.level.dimension().location().toString().hashCode();
     }
 }

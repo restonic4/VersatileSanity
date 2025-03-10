@@ -1,6 +1,5 @@
 package com.restonic4.versatilesanity.mixin;
 
-import com.mojang.datafixers.util.Either;
 import com.restonic4.versatilesanity.VersatileSanity;
 import com.restonic4.versatilesanity.compatibility.CompatibleMods;
 import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
@@ -12,10 +11,7 @@ import com.restonic4.versatilesanity.modules.*;
 import com.restonic4.versatilesanity.util.UndergroundDetector;
 import com.restonic4.versatilesanity.util.Utils;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Unit;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,10 +19,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
-
-import java.util.Map;
 
 @Mixin(Player.class)
 public class PlayerMixin {
@@ -128,7 +120,7 @@ public class PlayerMixin {
             if (shouldTick(player, config.getVillageTicks()) && HomeDetectionComponents.HOME_DETECTION.get(player).isHome(player.blockPosition(), HomeDetectionComponent.DETECTION_RANGE)) {
                 SanityEventHandler.onHomeTick(player);
             }
-
+        } else if (player.level().isClientSide()) {
             CreepySoundManager.tick();
             ScreenShaker.tick();
             WhispersManager.tick();
