@@ -16,7 +16,6 @@
   ],
   "client": [
     "GuiMixin",
-    "LevelRendererMixin",
     "LightTextureMixin",
     "OptionsMixin",
     "SoundEngineMixin"

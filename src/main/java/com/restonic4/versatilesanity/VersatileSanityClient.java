@@ -7,6 +7,7 @@ import com.chaotic_loom.under_control.events.types.ClientEvents;
 import com.chaotic_loom.under_control.events.types.RegistrationEvents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.*;
+import com.restonic4.versatilesanity.networking.ClientSanityManager;
 import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -18,8 +19,6 @@ import org.joml.Vector3f;
 public class VersatileSanityClient implements ClientModInitializer {
     private VersatileSanityConfig config = VersatileSanity.getConfig();
     private static DynamicSoundManager dynamicSoundManager;
-
-    public static GeoRenderer geoRenderer;
 
     @Override
     public void onInitializeClient() {
@@ -33,20 +32,10 @@ public class VersatileSanityClient implements ClientModInitializer {
             return EventResult.SUCCEEDED;
         });
 
-        geoRenderer = new GeoRenderer();
-        WorldRenderEvents.END.register(geoRenderer::renderCubes);
-
-        geoRenderer.addCube(
-                "geo",
-                new Vector3f(0, 100, 0),
-                new Vector3f(10, 10, 10),
-                new GeoRenderer.Rotation(0, 0, 0),
-                new ResourceLocation(VersatileSanity.MOD_ID, "textures/black.png"),
-                1f, 1f, 1f, 1f
-        );
+        GeoRenderer geoRenderer = new GeoRenderer();
 
         ClientTickEvents.START_CLIENT_TICK.register((minecraft) -> {
-            if (minecraft.player != null && minecraft.player.isCrouching()) {
+            if (minecraft.player != null && ClientSanityManager.getSanity() <= config.getMinSanity()) {
                 geoRenderer.startKilling();
             }
 

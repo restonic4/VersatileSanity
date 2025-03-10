@@ -28,19 +28,19 @@ public class SanityStatusComponentImpl implements SanityStatusComponent, AutoSyn
 
     @Override
     public void setSanityStatus(int value) {
-        this.sanity = Math.min(value, VersatileSanity.getConfig().getMaxSanity());
+        this.sanity = Math.max(VersatileSanity.getConfig().getMinSanity(), Math.min(value, VersatileSanity.getConfig().getMaxSanity()));
         sync();
     }
 
     @Override
     public void decrementSanityStatus(int amount) {
-        this.sanity = Math.max(-(VersatileSanity.getConfig().getMaxSanity() / 10), this.sanity - amount);
+        this.setSanityStatus(this.sanity - amount);
         sync();
     }
 
     @Override
     public void incrementSanityStatus(int amount) {
-        this.sanity = Math.min(VersatileSanity.getConfig().getMaxSanity(), this.sanity + amount);
+        this.setSanityStatus(this.sanity + amount);
         sync();
     }
 

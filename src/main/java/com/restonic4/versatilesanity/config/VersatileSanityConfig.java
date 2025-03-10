@@ -179,6 +179,10 @@ public class VersatileSanityConfig extends ModConfig {
         return getServerConfig().get("max_sanity_value", Integer.class);
     }
 
+    public int getMinSanity() {
+        return -(VersatileSanity.getConfig().getMaxSanity() / 10);
+    }
+
     public int getStartingSanity() {
         return getServerConfig().get("starting_sanity_value", Integer.class);
     }

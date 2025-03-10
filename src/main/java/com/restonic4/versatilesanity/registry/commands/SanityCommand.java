@@ -12,6 +12,9 @@ import com.restonic4.versatilesanity.networking.packets.PlayCreepySoundOnClient;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,6 +25,7 @@ public class SanityCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 literal("sanity")
+                        .then(createSubcommandWithValue("get"))
                         .then(createSubcommandWithValue("set"))
                         .then(createSubcommandWithValue("add"))
                         .then(createSubcommandWithValue("decrease"))
@@ -53,7 +57,20 @@ public class SanityCommand {
                                                     var targets = EntityArgument.getPlayers(context, "targets");
                                                     int value = IntegerArgumentType.getInteger(context, "value");
 
+                                                    CommandSourceStack source = context.getSource();
+                                                    ServerPlayer sender = source.getPlayerOrException();
+
                                                     switch (action) {
+                                                        case "get":
+                                                            final String[] sanityText = {""};
+
+                                                            targets.forEach(player -> {
+                                                                sanityText[0] = sanityText[0] + player.getDisplayName().getString() + ": " + SanityStatusComponents.SANITY_STATUS.get(player).getSanityStatus();
+                                                            });
+
+                                                            sender.sendSystemMessage(Component.literal(sanityText[0]));
+
+                                                            break;
                                                         case "set":
                                                             targets.forEach(player -> {
                                                                 SanityStatusComponents.SANITY_STATUS.get(player)
