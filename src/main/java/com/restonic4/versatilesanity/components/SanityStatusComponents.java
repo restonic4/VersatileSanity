@@ -5,6 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistryV3;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
+import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.minecraft.world.entity.player.Player;
 
 public class SanityStatusComponents implements EntityComponentInitializer {
@@ -13,6 +14,7 @@ public class SanityStatusComponents implements EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerFor(Player.class, SANITY_STATUS, SanityStatusComponentImpl::new);
+        //registry.registerFor(Player.class, SANITY_STATUS, SanityStatusComponentImpl::new);
+        registry.registerForPlayers(SANITY_STATUS, SanityStatusComponentImpl::new, RespawnCopyStrategy.ALWAYS_COPY);
     }
 }

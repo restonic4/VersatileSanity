@@ -13,6 +13,7 @@ import com.mojang.math.Axis;
 import com.restonic4.versatilesanity.VersatileSanityClient;
 import com.restonic4.versatilesanity.networking.packets.GeoKill;
 import com.restonic4.versatilesanity.registry.CustomSounds;
+import com.restonic4.versatilesanity.util.ExtendedMinecraft;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Camera;
@@ -61,7 +62,7 @@ public class GeoRenderer {
     }
 
     public void startKilling() {
-        if (isAnimating()) {
+        if (isAnimating() || Minecraft.getInstance().player.isDeadOrDying()) {
             return;
         }
 
@@ -115,6 +116,8 @@ public class GeoRenderer {
             FlagHelper.set("geo_death", true);
             FlagHelper.set("geo_death_world", getCurrentWorldIdentifier());
             Minecraft client = Minecraft.getInstance();
+            ExtendedMinecraft extendedMinecraft = (ExtendedMinecraft) client;
+            extendedMinecraft.setClosing(false);
             client.execute(client::stop);
         }
 

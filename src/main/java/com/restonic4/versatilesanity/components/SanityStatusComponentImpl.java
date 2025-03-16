@@ -10,10 +10,12 @@ public class SanityStatusComponentImpl implements SanityStatusComponent, AutoSyn
 
     private final Player player;
     private int sanity;
+    private boolean wasKilledByGeo;
 
     public SanityStatusComponentImpl(Player player) {
         this.player = player;
         this.sanity = VersatileSanity.getConfig().getStartingSanity();
+        this.wasKilledByGeo = false;
     }
 
     @Override
@@ -45,21 +47,37 @@ public class SanityStatusComponentImpl implements SanityStatusComponent, AutoSyn
     }
 
     @Override
+    public void setKilledByGeo(boolean value) {
+        this.wasKilledByGeo = value;
+        sync();
+    }
+
+    @Override
+    public boolean wasKilledByGeo() {
+        return wasKilledByGeo;
+    }
+
+    @Override
     public void readFromNbt(CompoundTag tag) {
         if (tag.contains("Sanity")) {
             this.sanity = tag.getInt("Sanity");
         } else {
             this.sanity = VersatileSanity.getConfig().getStartingSanity();
         }
+
+        if (tag.contains("KilledByGeo")) {
+            this.wasKilledByGeo = tag.getBoolean("KilledByGeo");
+        }
     }
 
     @Override
     public void writeToNbt(CompoundTag tag) {
         tag.putInt("Sanity", this.sanity);
+        tag.putBoolean("KilledByGeo", this.wasKilledByGeo);
     }
 
     @Override
     public void sync() {
-        SanityStatusBarNetworking.syncCustomStatus(player, sanity);
+        SanityStatusBarNetworking.syncCustomStatus(player, sanity, wasKilledByGeo);
     }
 }

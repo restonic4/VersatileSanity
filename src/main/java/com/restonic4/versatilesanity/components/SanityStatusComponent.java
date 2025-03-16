@@ -13,5 +13,9 @@ public interface  SanityStatusComponent extends Component {
 
     void incrementSanityStatus(int amount);
 
+    void setKilledByGeo(boolean value);
+
+    boolean wasKilledByGeo();
+
     void sync();
 }

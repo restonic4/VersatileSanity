@@ -11,6 +11,7 @@ import com.restonic4.versatilesanity.networking.ClientSanityManager;
 import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import com.restonic4.versatilesanity.registry.debuggers.ClientDebuggers;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.resources.ResourceLocation;
@@ -35,8 +36,13 @@ public class VersatileSanityClient implements ClientModInitializer {
         });
 
         GeoRenderer geoRenderer = new GeoRenderer();
+        GeoClockRenderer geoClockRenderer = new GeoClockRenderer();
 
         ClientTickEvents.START_CLIENT_TICK.register((minecraft) -> {
+            if (minecraft.player != null && minecraft.player.isCrouching()) {
+                geoClockRenderer.startTime();
+            }
+
             if (minecraft.player != null && ClientSanityManager.getSanity() <= config.getMinSanity()) {
                 geoRenderer.startKilling();
             }

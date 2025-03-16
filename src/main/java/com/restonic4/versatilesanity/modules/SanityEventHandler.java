@@ -284,6 +284,8 @@ public class SanityEventHandler {
     public static void geoKill(Player player) {
         if (player == null) return;
 
+        SanityStatusComponents.SANITY_STATUS.get(player).setKilledByGeo(true);
+
         Inventory inventory = player.getInventory();
 
         int removedItemCount = 0;

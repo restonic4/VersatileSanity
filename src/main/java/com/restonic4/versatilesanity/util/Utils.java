@@ -1,43 +1,32 @@
 package com.restonic4.versatilesanity.util;
 
 import com.restonic4.versatilesanity.VersatileSanity;
-import com.restonic4.versatilesanity.modules.SanityEventHandler;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.StructureTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.TraceableEntity;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.ai.village.poi.PoiTypes;
-import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.*;
-import net.minecraft.world.entity.monster.hoglin.Hoglin;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.FishingHook;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.RecordItem;
@@ -48,13 +37,10 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.storage.loot.LootDataManager;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -63,9 +49,10 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class Utils {
+    public static final Random random = new Random();
+
     public static int getLightLevel(Player player) {
         Level level = player.level();
         BlockPos pos = player.blockPosition();
@@ -505,5 +492,68 @@ public class Utils {
         level.addFreshEntity(itemEntity);
 
         return itemEntity;
+    }
+
+
+    private static final Set<Block> BLACKLIST = Set.of(
+            Blocks.BEDROCK,
+            Blocks.OBSIDIAN,
+            Blocks.NETHERRACK
+    );
+
+    // Determines if a block is unsuitable to support fire (replaceable blocks like plants)
+    private static boolean shouldBlackList(BlockState state) {
+        return state.canBeReplaced();
+    }
+
+    public static void placeRandomFire(Level level, BlockPos center, int radius) {
+        FlammableBlockRegistry registry = FlammableBlockRegistry.getDefaultInstance();
+
+        for (int i = 0; i < 100; i++) {
+            // Generate random position within radius
+            int offsetX = random.nextInt(radius * 2 + 1) - radius;
+            int offsetY = random.nextInt(radius * 2 + 1) - radius;
+            int offsetZ = random.nextInt(radius * 2 + 1) - radius;
+            BlockPos candidatePos = center.offset(offsetX, offsetY, offsetZ);
+
+            // Only place fire in air blocks
+            if (!level.getBlockState(candidatePos).isAir()) continue;
+
+            boolean canPlace = false;
+
+            // Check for valid ground placement (block below)
+            BlockPos belowPos = candidatePos.below();
+            BlockState belowState = level.getBlockState(belowPos);
+            if (!BLACKLIST.contains(belowState.getBlock()) &&
+                    registry.get(belowState.getBlock()).getBurnChance() > 0 &&
+                    !shouldBlackList(belowState)) {
+                canPlace = true;
+            }
+            // Check for valid wall placement (horizontal neighbors)
+            else {
+                for (Direction dir : Direction.Plane.HORIZONTAL) {
+                    BlockPos neighborPos = candidatePos.relative(dir);
+                    BlockState neighborState = level.getBlockState(neighborPos);
+
+                    if (!BLACKLIST.contains(neighborState.getBlock()) &&
+                            registry.get(neighborState.getBlock()).getBurnChance() > 0 &&
+                            !shouldBlackList(neighborState)) {
+                        canPlace = true;
+                        break;
+                    }
+                }
+            }
+
+            if (canPlace) {
+                // Let FireBlock handle proper rotation and attachment
+                BlockState fireState = Blocks.FIRE.defaultBlockState();
+                FireBlock fireBlock = (FireBlock) Blocks.FIRE;
+
+                // Update fire state based on neighboring blocks
+                fireState = fireBlock.getStateForPlacement(level, candidatePos);
+                level.setBlock(candidatePos, fireState, Block.UPDATE_ALL);
+                return;
+            }
+        }
     }
 }

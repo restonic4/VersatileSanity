@@ -8,6 +8,10 @@ import com.restonic4.versatilesanity.components.HomeDetectionComponents;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.*;
+import com.restonic4.versatilesanity.modules.hallucinations.CreepySoundManager;
+import com.restonic4.versatilesanity.modules.hallucinations.FireManager;
+import com.restonic4.versatilesanity.modules.hallucinations.ScreenShaker;
+import com.restonic4.versatilesanity.modules.hallucinations.WhispersManager;
 import com.restonic4.versatilesanity.util.UndergroundDetector;
 import com.restonic4.versatilesanity.util.Utils;
 import com.restonic4.versatilesanity.util.WaterMassDetector;
@@ -124,6 +128,7 @@ public class PlayerMixin {
             CreepySoundManager.tick();
             ScreenShaker.tick();
             WhispersManager.tick();
+            FireManager.tick();
         }
     }
 

@@ -11,3 +11,4 @@ accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/gui/screens/TitleScreen$WarningLabel
+accessible method net/minecraft/world/level/block/FireBlock getStateForPlacement (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;

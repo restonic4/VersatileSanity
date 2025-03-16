@@ -14,8 +14,10 @@ import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCo
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
 import com.restonic4.versatilesanity.modules.ActivityTrackingManager;
+import com.restonic4.versatilesanity.modules.RandomPlayerSpawnerManager;
 import com.restonic4.versatilesanity.modules.SanityEventHandler;
 import com.restonic4.versatilesanity.modules.SleepHandler;
+import com.restonic4.versatilesanity.modules.hallucinations.FireManager;
 import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import com.restonic4.versatilesanity.registry.commands.SanityCommand;
 import com.restonic4.versatilesanity.registry.effects.EffectManager;
@@ -64,7 +66,12 @@ public class VersatileSanity implements ModInitializer {
         config.register();
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            if (SanityStatusComponents.SANITY_STATUS.get(newPlayer).wasKilledByGeo()) {
+                RandomPlayerSpawnerManager.forceSpawnRandomly(newPlayer);
+            }
+
             SanityStatusComponents.SANITY_STATUS.get(newPlayer).setSanityStatus(config.getReSpawnSanity());
+            SanityStatusComponents.SANITY_STATUS.get(newPlayer).setKilledByGeo(false);
 
             int maxSanity = config.getMaxSanity();
 

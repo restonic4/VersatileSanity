@@ -1,10 +1,7 @@
 package com.restonic4.versatilesanity.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.restonic4.versatilesanity.VersatileSanityClient;
-import com.restonic4.versatilesanity.modules.WhispersManager;
+import com.restonic4.versatilesanity.modules.hallucinations.WhispersManager;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.sounds.SoundSource;
@@ -12,13 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.function.Consumer;
 
 @Mixin(Options.class)
 public abstract class OptionsMixin {

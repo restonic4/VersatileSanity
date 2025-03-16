@@ -17,6 +17,7 @@
   "client": [
     "GuiMixin",
     "LightTextureMixin",
+    "MinecraftMixin",
     "OptionsMixin",
     "PlayerRendererMixin",
     "SoundEngineMixin",

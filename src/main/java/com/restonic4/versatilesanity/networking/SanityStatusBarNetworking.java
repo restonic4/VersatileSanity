@@ -15,19 +15,22 @@ public class SanityStatusBarNetworking {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(SYNC_SANITY_STATUS, (client, handler, buf, responseSender) -> {
             int sanity = buf.readInt();
+            boolean wasKilledByGeo = buf.readBoolean();
 
             client.execute(() -> {
                 if (client.player != null) {
                     ClientSanityManager.setSanity(sanity);
+                    ClientSanityManager.setWasKilledByGeo(wasKilledByGeo);
                 }
             });
         });
     }
 
-    public static void syncCustomStatus(Player player, int sanity) {
+    public static void syncCustomStatus(Player player, int sanity, boolean wasKilledByGeo) {
         if (player instanceof ServerPlayer serverPlayer) {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeInt(sanity);
+            buf.writeBoolean(wasKilledByGeo);
 
             ServerPlayNetworking.send(serverPlayer, SYNC_SANITY_STATUS, buf);
         }

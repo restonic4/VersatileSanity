@@ -1,12 +1,9 @@
 package com.restonic4.versatilesanity.networking.packets;
 
 import com.chaotic_loom.under_control.UnderControl;
-import com.chaotic_loom.under_control.api.config.ConfigAPI;
-import com.chaotic_loom.under_control.client.ClientCacheData;
-import com.chaotic_loom.under_control.config.ConfigProvider;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
-import com.restonic4.versatilesanity.modules.CreepySoundManager;
+import com.restonic4.versatilesanity.modules.hallucinations.CreepySoundManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
