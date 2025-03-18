@@ -21,6 +21,7 @@ import org.joml.Vector3f;
 public class VersatileSanityClient implements ClientModInitializer {
     private VersatileSanityConfig config = VersatileSanity.getConfig();
     private static DynamicSoundManager dynamicSoundManager;
+    private static GeoRenderer geoRenderer;
 
     @Override
     public void onInitializeClient() {
@@ -35,14 +36,9 @@ public class VersatileSanityClient implements ClientModInitializer {
             return EventResult.SUCCEEDED;
         });
 
-        GeoRenderer geoRenderer = new GeoRenderer();
-        GeoClockRenderer geoClockRenderer = new GeoClockRenderer();
+        geoRenderer = new GeoRenderer();
 
         ClientTickEvents.START_CLIENT_TICK.register((minecraft) -> {
-            if (minecraft.player != null && minecraft.player.isCrouching()) {
-                geoClockRenderer.startTime();
-            }
-
             if (minecraft.player != null && ClientSanityManager.getSanity() <= config.getMinSanity()) {
                 geoRenderer.startKilling();
             }
@@ -72,5 +68,9 @@ public class VersatileSanityClient implements ClientModInitializer {
 
     public static DynamicSoundManager getDynamicSoundManager() {
         return dynamicSoundManager;
+    }
+
+    public static GeoRenderer getGeoRenderer() {
+        return geoRenderer;
     }
 }

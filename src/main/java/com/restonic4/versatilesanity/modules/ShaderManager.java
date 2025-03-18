@@ -2,6 +2,7 @@ package com.restonic4.versatilesanity.modules;
 
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.restonic4.versatilesanity.VersatileSanity;
+import com.restonic4.versatilesanity.VersatileSanityClient;
 import com.restonic4.versatilesanity.networking.ClientSanityManager;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
@@ -45,7 +46,7 @@ public class ShaderManager {
             float intensityRemappedForVignette = 1 - Math.max(0, Math.min(1, (float) MathHelper.normalize(intensityBase, 0, 0.65f)));
             float intensityRemappedForNoise = 1 - Math.max(0, Math.min(1, (float) MathHelper.normalize(intensityBase, 0, 0.75f)));
 
-            updateNoise(intensityRemappedForNoise);
+            updateNoise(intensityRemappedForNoise + 10 * VersatileSanityClient.getGeoRenderer().getGeoAnimProgress());
             updateBadVision(intensity);
             updateGrayscale(intensity);
             updateVignette(tickDelta, level, intensityRemappedForVignette);

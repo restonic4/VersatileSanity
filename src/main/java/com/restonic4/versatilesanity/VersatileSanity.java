@@ -13,10 +13,7 @@ import com.restonic4.versatilesanity.compatibility.CompatibleMods;
 import com.restonic4.versatilesanity.compatibility.tough_as_nails.ToughAsNailsCompatibility;
 import com.restonic4.versatilesanity.components.SanityStatusComponents;
 import com.restonic4.versatilesanity.config.VersatileSanityConfig;
-import com.restonic4.versatilesanity.modules.ActivityTrackingManager;
-import com.restonic4.versatilesanity.modules.RandomPlayerSpawnerManager;
-import com.restonic4.versatilesanity.modules.SanityEventHandler;
-import com.restonic4.versatilesanity.modules.SleepHandler;
+import com.restonic4.versatilesanity.modules.*;
 import com.restonic4.versatilesanity.modules.hallucinations.FireManager;
 import com.restonic4.versatilesanity.networking.SanityStatusBarNetworking;
 import com.restonic4.versatilesanity.registry.commands.SanityCommand;
@@ -26,6 +23,7 @@ import com.restonic4.versatilesanity.util.LootQualityChecker;
 import com.restonic4.versatilesanity.util.Utils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -34,7 +32,9 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -52,6 +52,7 @@ import net.minecraft.world.entity.animal.sniffer.Sniffer;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,25 +62,40 @@ public class VersatileSanity implements ModInitializer {
 
     private static final VersatileSanityConfig config = new VersatileSanityConfig();
 
+    public static final ResourceKey<Level> LOST_VALLEYS = ResourceKey.create(
+            Registries.DIMENSION,
+            new ResourceLocation(MOD_ID, "lost_valleys")
+    );
+
     @Override
     public void onInitialize() {
         config.register();
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             if (SanityStatusComponents.SANITY_STATUS.get(newPlayer).wasKilledByGeo()) {
-                RandomPlayerSpawnerManager.forceSpawnRandomly(newPlayer);
+                newPlayer.teleportTo(newPlayer.getServer().getLevel(LOST_VALLEYS), 0, 0, 0, 0, 0);
             }
 
-            SanityStatusComponents.SANITY_STATUS.get(newPlayer).setSanityStatus(config.getReSpawnSanity());
-            SanityStatusComponents.SANITY_STATUS.get(newPlayer).setKilledByGeo(false);
+            if (SanityStatusComponents.SANITY_STATUS.get(oldPlayer).getSanityPercentage() <= 0.3) {
+                SanityStatusComponents.SANITY_STATUS.get(newPlayer).setSanityStatus(config.getMinSanity());
+            } else {
+                SanityStatusComponents.SANITY_STATUS.get(newPlayer).setSanityStatus(config.getReSpawnSanity());
 
-            int maxSanity = config.getMaxSanity();
+                int maxSanity = config.getMaxSanity();
 
-            int requiredSanity = (int) (maxSanity / 2.5f);
-            int numberOfHeals = (int) Math.ceil(requiredSanity / (double) MindRestoration.HEAL_AMOUNT);
-            int ticks = numberOfHeals * MindRestoration.TICKS;
+                int requiredSanity = (int) (maxSanity / 2.5f);
+                int numberOfHeals = (int) Math.ceil(requiredSanity / (double) MindRestoration.HEAL_AMOUNT);
+                int ticks = numberOfHeals * MindRestoration.TICKS;
 
-            newPlayer.addEffect(new MobEffectInstance(EffectManager.MIND_RESTORATION, ticks, 0));
+                newPlayer.addEffect(new MobEffectInstance(EffectManager.MIND_RESTORATION, ticks, 0));
+            }
+        });
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+            if (destination.dimension() != LOST_VALLEYS) {
+                System.out.println(player.getDisplayName().getString() + " moved to " + destination.dimension().location());
+                SanityStatusComponents.SANITY_STATUS.get(player).setKilledByGeo(false);
+            }
         });
 
         ServerPlayConnectionEvents.JOIN.register((serverGamePacketListener, packetSender, minecraftServer) -> {
@@ -125,16 +141,6 @@ public class VersatileSanity implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, commandSelection) -> {
             SanityCommand.register(dispatcher);
-        });
-
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            /*if (server.getTicks() % CHECK_INTERVAL != 0) return;
-
-            for (ServerLevel level : server.getAllLevels()) {
-                level.getEntitiesByType(EntityType.VILLAGER, entity -> true).forEach(villager -> {
-                    checkAndFleeFromLowHealthPlayers((VillagerEntity) villager, level);
-                });
-            }*/
         });
 
         ActivityTrackingManager.init();

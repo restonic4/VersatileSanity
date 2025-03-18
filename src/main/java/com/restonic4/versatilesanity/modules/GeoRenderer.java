@@ -50,6 +50,8 @@ public class GeoRenderer {
     private Vector3f animStartPos = new Vector3f();
     private boolean wasAnimating = false;
 
+    private float geoAnimProgress = 0;
+
     public GeoRenderer() {
         this.cube = new RenderLayerRenderer<>(
                 "geo",
@@ -85,6 +87,7 @@ public class GeoRenderer {
         if (!isAnimating()) {
             CutsceneAPI.stop();
             wasAnimating = false;
+            geoAnimProgress = 0;
             return;
         } else if (!wasAnimating) {
             animStartPos.set(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
@@ -108,17 +111,12 @@ public class GeoRenderer {
 
         float progress = MathHelper.getProgress(getStartAnim(), getEndAnim());
 
+        geoAnimProgress = progress;;
+
         if (progress >= 1) {
             stopAnimation();
 
             GeoKill.sendToServer();
-            ErrorWindow.execute(I18n.get("fate.versatilesanity.death"));
-            FlagHelper.set("geo_death", true);
-            FlagHelper.set("geo_death_world", getCurrentWorldIdentifier());
-            Minecraft client = Minecraft.getInstance();
-            ExtendedMinecraft extendedMinecraft = (ExtendedMinecraft) client;
-            extendedMinecraft.setClosing(false);
-            client.execute(client::stop);
         }
 
         float progressX = EasingSystem.getEasedValue(progress, animStartPos.x, cube.getPosition().x, EasingSystem.EasingType.EXPONENTIAL_IN);
@@ -136,6 +134,10 @@ public class GeoRenderer {
     public void stopAnimation() {
         this.isAnimating = false;
         RenderingHelper.RenderLayers.removeRenderLayer(this.cube);
+    }
+
+    public float getGeoAnimProgress() {
+        return geoAnimProgress;
     }
 
     public boolean isAnimating() {
